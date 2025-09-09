@@ -1,102 +1,139 @@
-#include <iostream>
-#include <string>
-#include <vector>
+#include<iostream>
+#include<fstream> //header file used for file
+#include<string>
 using namespace std;
-
-class Wallet;       
-class Transaction; 
-
-class User {
-private:
-    string id;
+class User{  //the one who is using the system(customer)
+   public:
+    string ID;
     string name;
+    string email;
+    int phoneNo;
+
+    protected:
     string password;
-    string phone;
+    bool logIn;
 
-protected:
-    Wallet* wallet;                        
-    vector<Transaction*> transactions;    
 
-public:
-    User(string id, string name, string password, string phone, double balance);
-
-    string getId();
-    string getPhone();
-    string getName();
-    bool checkPassword(string pass);
-    void showTransaction();
-    double getBalance();
-};
-
-class Customer {
-
-};
-
-class Merchant {
-
-};
-
-class Wallet {
-    
-
-};
-
-class Payment {
-    
-};
-
-class Transaction {
-    
-public:
-    void display() {
-        cout << "Transaction details\n";
+    public:
+    User() {  
+        //At start never it shoes u have already login first u 
+        //need to enter the details and then it shows 
+        logIn=false;
     }
-};
-
-class PaymentFlow {
-   
-};
-
-class FileHandler {
-   
-};
-
-
-
-User::User(string id, string name, string password, string phone, double balance) {
-    this->id = id;
-    this->name = name;
-    this->password = password;
-    this->phone = phone;
-    this->wallet = new Wallet();   
+    User(string ID, string name,string email,int phoneNo){
+        this->ID=ID;  //Parametrized constructor
+        this->name=name;
+        this->phoneNo=phoneNo;
+        this->email=email;
+        this->password=password;
+        this->logIn=false;
+    }
     
+
+    //Registration for the new user
+    void newRegisterUser(){
+        cout<<"Enter User ID: ";
+        cin>>ID;
+        cout<<"Enter Name: ";
+        cin.ignore();
+        getline(cin,name);  //name  cant be continuous by using 
+        //get line two different words input will be taken
+        cout<<"Enter Email-id: ";
+        cin>>email;
+        cout<<"Enter Phone Number: ";
+        cin>>phoneNo;
+        cout<<"Enter Password: ";
+        cin>>password;
+
+
+        void saveToFIle();//will user information in user.txt file
+            cout<<"Congrats! User has registered successfully...";
+
+        
+
+    }
+    void saveToFile() {
+        try{
+            ofstream fout("users.txt", ios::app);//will open file in append mode
+            if(!fout){
+                throw " Error: Coundn't open the file";
+            
+            }
+            fout<<ID << " "<< name<< " "<< email<<" "<< phoneNo <<" "<<password<< endl;
+      fout.close(); //add the above details and close the file
+
+        }
+        catch(const exception& e) {
+            cout<<e.what() << endl;   //will be showing the error
+        }   
+        }
+
+        bool login(string userID, string userPassword){
+            try{
+                ifstream fin("users.txt");
+                if(!fin.is_open()) {
+                    throw runtime_error("Error: Can't open the file");
+                }
+
+                string fID;
+                string fName;
+                string fEmail;
+                string fPassword;
+                string fPhone;
+                bool userFound=false;
+
+
+                
+              while (fin >> fID >> fName >> fEmail >> fPhone >> fPassword) {
+            if (fID == userID) {
+                userFound = true;  // user ID exists
+
+                if (fPassword == userPassword) {
+                    cout << "Login successful! Welcome " << fName << ".\n";
+                    logIn = true;
+                    fin.close();
+                    return true;
+                }
+            }
+        }
+
+        fin.close();
+
+        if (!userFound) {
+            cout << "User not found! Please register first.\n";
+        } else {
+            cout << "Wrong password!\n";
+        }
+    }
+    catch (const exception& e) {
+        cout << e.what() << endl;
+    }
+    return false;
 }
 
-string User::getId() {
-    return id;
-}
-
-string User::getPhone() {
-    return phone;
-}
-
-string User::getName() {
-    return name;
-}
-
-bool User::checkPassword(string pass) {
-    return this->password == pass;
-}
-
-void User::showTransaction() {
-   
-}
+        
 
 
+        void logOut() {
+            if(logIn) {
+                logIn=false;
+                cout<<"Logged out successfully";
+            } 
+            else {
+                cout<<"You are not login ";
+            }
+        }
 
-
+        void displayProfile() {
+            cout<<"\n=====User Profile=====";
+            cout<<"User ID: "<<ID<<endl;
+            cout<<"Name: "<<endl;
+            cout<<"Email: "<<endl;
+            cout<<"Phone: "<<endl;
+            
+        }
+    };
 
 int main() {
-   
     return 0;
 }
