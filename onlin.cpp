@@ -228,6 +228,36 @@ bool login(string id, string pass) {
                     return true;
                 }
             }
+           
+            fin.close();
+            cout << "Invalid Merchant ID or Password!\n";
+        } catch (const exception &e) {
+            cout << e.what() << endl;
+        }
+        return false;
+    }
+
+    void logOut() {
+        if (loggedIn) {
+            loggedIn = false;
+            cout << "Merchant logged out successfully.\n";
+        } else {
+            cout << "Merchant is not logged in.\n";
+        }
+    }
+
+    void displayProfile() {
+        if (loggedIn) {
+            cout << "\n===== Merchant Profile =====\n";
+            cout << "Merchant ID: " << merchantID << endl;
+            cout << "Name: " << name << endl;
+            cout << "Email: " << email << endl;
+        } else {
+            cout << "Please login to view profile.\n";
+        }
+    }
+};
+
 class Wallet {
 private:
 string walletID;
