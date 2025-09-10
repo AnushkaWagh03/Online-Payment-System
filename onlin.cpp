@@ -137,6 +137,11 @@ class Customer : public User{
 private:
 float balance;
 
+public:
+ Customer() : User(){
+  balance = 0.0;
+ }
+
 
 int main() {
     return 0;
