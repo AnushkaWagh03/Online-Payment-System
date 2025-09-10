@@ -161,6 +161,18 @@ void loadBalance(){
 }
 
 
+class Merchant {
+private:
+    string merchantID;
+    string name;
+    string email;
+    string password;
+    bool loggedIn;
+public:
+    Merchant() {
+        loggedIn = false;
+    }
+
 class Wallet {
 private:
 string walletID;
