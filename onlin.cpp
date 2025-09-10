@@ -178,6 +178,15 @@ public:
         this->userID = uID;
         this->balance = bal;
     }
+  void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            cout << "Deposited " << amount << " successfully.\n";
+            saveToFile();
+        } else {
+            cout << "Invalid amount!\n";
+        }
+    }
 
 
 int main() {
