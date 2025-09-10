@@ -146,6 +146,9 @@ Customer(string ID, string name, strng email, int phoneNo) : User(ID, name, emai
 loadBalance():
 }
 
+void saveBalance(){
+   
+}
 void loadBalance(){
    ifstream file("balance.txt");
         string id;
