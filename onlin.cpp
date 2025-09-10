@@ -146,8 +146,19 @@ Customer(string ID, string name, strng email, int phoneNo) : User(ID, name, emai
 loadBalance():
 }
 
-void saveBalance(){
-
+void loadBalance(){
+   ifstream file("balance.txt");
+        string id;
+        float bal;
+        balance = 0.0;
+        while (file >> id >> bal) {
+            if (id == ID) {
+                balance = bal;
+                break;
+            }
+        }
+        file.close();
+}
 
 
 
