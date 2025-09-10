@@ -13,7 +13,6 @@ class User{  //the one who is using the system(customer)
     string password;
     bool logIn;
 
-
     public:
     User() {  
         //At start never it shoes u have already login first u 
@@ -136,4 +135,6 @@ class User{  //the one who is using the system(customer)
 
 int main() {
     return 0;
+   int s;
+   
 }
