@@ -172,6 +172,24 @@ public:
     Merchant() {
         loggedIn = false;
     }
+ Merchant(string id, string name, string email, string password) {
+        this->merchantID = id;
+        this->name = name;
+        this->email = email;
+        this->password = password;
+        loggedIn = false;
+    }
+ void registerMerchant() {
+        cout << "\n===== Merchant Registration =====" << endl;
+        cout << "Enter Merchant ID: ";
+        cin >> merchantID;
+        cout << "Enter Name: ";
+        cin.ignore();
+        getline(cin, name);
+        cout << "Enter Email: ";
+        cin >> email;
+        cout << "Enter Password: ";
+        cin >> password;
 
 class Wallet {
 private:
