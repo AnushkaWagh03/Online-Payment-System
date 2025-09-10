@@ -173,7 +173,11 @@ public:
         userID = "";
         balance = 0.0;
     }
-
+ Wallet(string wID, string uID, double bal = 0.0) {
+        this->walletID = wID;
+        this->userID = uID;
+        this->balance = bal;
+    }
 
 
 int main() {
