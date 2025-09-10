@@ -308,7 +308,7 @@ void saveToFile() {
         }
     }     
 void displayWallet() {
-        cout << "\n===== Wallet Info =====\n";
+        cout << " Wallet Info :";
         cout << "Wallet ID: " << walletID << endl;
         cout << "User ID: " << userID << endl;
         cout << "Balance: " << balance << endl;
