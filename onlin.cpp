@@ -133,8 +133,12 @@ class User{  //the one who is using the system(customer)
         }
     };
 
+class Customer : public User{
+private:
+float balance;
+
+
 int main() {
     return 0;
-   int s;
    
 }
