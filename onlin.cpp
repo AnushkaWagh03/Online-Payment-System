@@ -194,8 +194,6 @@ public:
         saveToFile();
         cout << "Merchant registered successfully!\n";
     }
-
-    // Save Merchant data to file
     void saveToFile() {
         try {
             ofstream fout("merchants.txt", ios::app);
@@ -208,7 +206,26 @@ public:
             cout << e.what() << endl;
         }
     }
+bool login(string id, string pass) {
+        try {
+            ifstream fin("merchants.txt");
+            if (!fin.is_open()) {
+                throw runtime_error("Error: Can't open merchants file");
+            }
 
+            string fID, fName, fEmail, fPass;
+            while (fin >> fID >> fName >> fEmail >> fPass) {
+                if (fID == id && fPass == pass) {
+                    cout << "Login successful! Welcome Merchant " << fName << ".\n";
+                    loggedIn = true;
+                    merchantID = fID;
+                    name = fName;
+                    email = fEmail;
+                    password = fPass;
+                    fin.close();
+                    return true;
+                }
+            }
 
 class Wallet {
 private:
