@@ -190,6 +190,25 @@ public:
         cin >> email;
         cout << "Enter Password: ";
         cin >> password;
+    
+        saveToFile();
+        cout << "Merchant registered successfully!\n";
+    }
+
+    // Save Merchant data to file
+    void saveToFile() {
+        try {
+            ofstream fout("merchants.txt", ios::app);
+            if (!fout) {
+                throw runtime_error("Error: Could not open file.");
+            }
+            fout << merchantID << " " << name << " " << email << " " << password << endl;
+            fout.close();
+        } catch (const exception &e) {
+            cout << e.what() << endl;
+        }
+    }
+
 
 class Wallet {
 private:
