@@ -159,7 +159,7 @@ void loadBalance(){
         }
         file.close();
 }
-
+}:
 
 class Merchant {
 private:
@@ -207,7 +207,7 @@ public:
         } catch (const exception &e) {
             cout << e.what() << endl;
         }
-    }
+    };
 
 
 class Wallet {
