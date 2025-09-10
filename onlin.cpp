@@ -161,6 +161,19 @@ void loadBalance(){
 }
 
 
+class Wallet {
+private:
+string walletID;
+    string userID;      
+    double balance;
+};
+public:
+   Wallet() {
+        walletID = "WALLET000";
+        userID = "";
+        balance = 0.0;
+    }
+
 
 
 int main() {
