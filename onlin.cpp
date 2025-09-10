@@ -231,7 +231,51 @@ bool withdraw(double amount) {
         saveToFile();
         return true;
     }
+double getBalance() const {
+        return balance;
+    }
+void saveToFile() {
+        try {
+            ofstream fout("wallets.txt", ios::app);
+            if (!fout) throw runtime_error("Error: Couldn't open the wallet file");
 
+            fout << walletID << " " << userID << " " << balance << endl;
+            fout.close();
+        } catch (const exception &e) {
+            cout << e.what() << endl;
+        }
+    }
+ bool loadWallet(string uID) {
+        try {
+            ifstream fin("wallets.txt");
+            if (!fin.is_open()) throw runtime_error("Error: Can't open the wallet file");
+
+            string fWalletID, fUserID;
+            double fBalance;
+
+            while (fin >> fWalletID >> fUserID >> fBalance) {
+                if (fUserID == uID) {
+                    walletID = fWalletID;
+                    userID = fUserID;
+                    balance = fBalance;
+                    fin.close();
+                    return true;
+                }
+            }
+            fin.close();
+            return false;  
+        } catch (const exception &e) {
+            cout << e.what() << endl;
+            return false;
+        }
+    }
+void displayWallet() {
+        cout << " Wallet Info :\n";
+        cout << "Wallet ID: " << walletID << endl;
+        cout << "User ID: " << userID << endl;
+        cout << "Balance: " << balance << endl;
+    }
+};
 
 int main() {
     return 0;
