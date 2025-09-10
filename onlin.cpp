@@ -142,6 +142,9 @@ public:
   balance = 0.0;
  }
 
+Customer(string ID, string name, strng email, int phoneNo) : User(ID, name, email, int phoneNo){
+loadBalance():
+}
 
 int main() {
     return 0;
