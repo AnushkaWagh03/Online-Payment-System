@@ -172,6 +172,15 @@ public:
     Merchant() {
         loggedIn = false;
     }
+ Merchant(string id, string name, string email, string password) {
+        this->merchantID = id;
+        this->name = name;
+        this->email = email;
+        this->password = password;
+        loggedIn = false;
+    }
+
+
 
 class Wallet {
 private:
