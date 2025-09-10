@@ -199,7 +199,15 @@ public:
             cout << "Invalid amount!\n";
         }
     }
-
+bool withdraw(double amount) {
+    if (amount <= 0) {
+cout << "Invalid amount!\n";
+            return false;
+        }
+if (amount > balance) {
+            cout << "Insufficient balance!\n";
+            return false;
+        }
 
 int main() {
     return 0;
