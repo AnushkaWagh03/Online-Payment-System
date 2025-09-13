@@ -168,6 +168,151 @@ void saveBalance() {
                     fout << uid << " " << bal << endl;
                 }
             }
+class Merchant {
+private:
+    string merchantID;
+    string name;
+    string email;
+    string password;
+    bool loggedIn;
+
+    bool isDuplicateID(const string &id) {
+        ifstream fin("merchants.txt");
+        string fID, fName, fEmail, fPass;
+        while (fin >> fID >> fName >> fEmail >> fPass) {
+            if (fID == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+public:
+    Merchant() : loggedIn(false) {}
+
+    Merchant(string id, string name, string email, string password) {
+        this->merchantID = id;
+        this->name = name;
+        this->email = email;
+        this->password = password;
+        loggedIn = false;
+    }
+
+    ~Merchant() {
+        cout << "Merchant object destroyed for: " << name << endl;
+    }
+
+    void registerMerchant() {
+        cout << "\n--- Merchant Registration ---\n";
+
+        do {
+            cout << "Enter Merchant ID: ";
+            cin >> merchantID;
+            if (merchantID.empty()) {
+                cout << "Merchant ID cannot be empty.\n";
+                continue;
+            }
+            if (isDuplicateID(merchantID)) {
+                cout << "Merchant ID already exists! Please choose another.\n";
+                merchantID.clear();
+            }
+        } while (merchantID.empty());
+
+        cin.ignore();
+        do {
+            cout << "Enter Name: ";
+            getline(cin, name);
+            if (name.empty()) {
+                cout << "Name cannot be empty.\n";
+            }
+        } while (name.empty());
+
+        do {
+            cout << "Enter Email: ";
+            cin >> email;
+            if (email.empty()) {
+                cout << "Email cannot be empty.\n";
+            }
+        } while (email.empty());
+
+        string confirmPassword;
+        do {
+            cout << "Enter Password: ";
+            cin >> password;
+            cout << "Confirm Password: ";
+            cin >> confirmPassword;
+
+            if (password.empty()) {
+                cout << "Password cannot be empty.\n";
+            } else if (password != confirmPassword) {
+                cout << "Passwords do not match. Please try again.\n";
+                password.clear();
+            }
+        } while (password.empty() || password != confirmPassword);
+
+        saveToFile();
+        cout << "Merchant registered successfully!\n";
+    }
+
+    void saveToFile() {
+        try {
+            ofstream fout("merchants.txt", ios::app);
+            if (!fout.is_open()) {
+                throw runtime_error("Error: Could not open merchants.txt");
+            }
+            fout << merchantID << " " << name << " " << email << " " << password << endl;
+        } catch (const exception &e) {
+            cerr << e.what() << endl;
+        }
+    }
+
+    bool login(const string &id, const string &pass) {
+        try {
+            ifstream fin("merchants.txt");
+            if (!fin.is_open()) {
+                throw runtime_error("Error: Could not open merchants.txt");
+            }
+
+            string fID, fName, fEmail, fPass;
+            while (fin >> fID >> fName >> fEmail >> fPass) {
+                if (fID == id && fPass == pass) {
+                    loggedIn = true;
+                    merchantID = fID;
+                    name = fName;
+                    email = fEmail;
+                    password = fPass;
+                    cout << "Login successful! Welcome, " << name << ".\n";
+                    return true;
+                }
+            }
+            cout << "Invalid Merchant ID or Password.\n";
+        } catch (const exception &e) {
+            cerr << e.what() << endl;
+        }
+        return false;
+    }
+
+    void logOut() {
+        if (loggedIn) {
+            loggedIn = false;
+            cout << "Merchant logged out successfully.\n";
+        } else {
+            cout << "Merchant is not logged in.\n";
+        }
+    }
+
+    void displayProfile() const {
+        if (loggedIn) {
+            cout << "\n--- Merchant Profile ---\n";
+            cout << "Merchant ID : " << merchantID << endl;
+            cout << "Name        : " << name << endl;
+            cout << "Email       : " << email << endl;
+        } else {
+            cout << "Please login to view profile.\n";
+        }
+    }
+};
+
 
 class Wallet {
 private:
