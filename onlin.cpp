@@ -227,7 +227,6 @@ void saveBalance() {
         loadBalance();
     }
 };
-
 class Merchant {
 private:
     string merchantID;
@@ -246,7 +245,6 @@ private:
         }
         return false;
     }
-
 public:
     Merchant() : loggedIn(false) {}
 
@@ -257,14 +255,11 @@ public:
         this->password = password;
         loggedIn = false;
     }
-
     ~Merchant() {
         cout << "Merchant object destroyed for: " << name << endl;
     }
-
     void registerMerchant() {
         cout << "\n--- Merchant Registration ---\n";
-
         do {
             cout << "Enter Merchant ID: ";
             cin >> merchantID;
@@ -294,14 +289,12 @@ public:
                 cout << "Email cannot be empty.\n";
             }
         } while (email.empty());
-
         string confirmPassword;
         do {
             cout << "Enter Password: ";
             cin >> password;
             cout << "Confirm Password: ";
             cin >> confirmPassword;
-
             if (password.empty()) {
                 cout << "Password cannot be empty.\n";
             } else if (password != confirmPassword) {
@@ -313,7 +306,6 @@ public:
         saveToFile();
         cout << "Merchant registered successfully!\n";
     }
-
     void saveToFile() {
         try {
             ofstream fout("merchants.txt", ios::app);
@@ -325,14 +317,12 @@ public:
             cerr << e.what() << endl;
         }
     }
-
     bool login(const string &id, const string &pass) {
         try {
             ifstream fin("merchants.txt");
             if (!fin.is_open()) {
                 throw runtime_error("Error: Could not open merchants.txt");
             }
-
             string fID, fName, fEmail, fPass;
             while (fin >> fID >> fName >> fEmail >> fPass) {
                 if (fID == id && fPass == pass) {
@@ -351,7 +341,6 @@ public:
         }
         return false;
     }
-
     void logOut() {
         if (loggedIn) {
             loggedIn = false;
@@ -360,7 +349,6 @@ public:
             cout << "Merchant is not logged in.\n";
         }
     }
-
     void displayProfile() const {
         if (loggedIn) {
             cout << "\n--- Merchant Profile ---\n";
@@ -372,8 +360,6 @@ public:
         }
     }
 };
-
-
 class Wallet {
 private:
 string walletID;
