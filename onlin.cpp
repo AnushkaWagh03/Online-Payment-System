@@ -151,6 +151,24 @@ public:
         cout << "Customer object destroyed for: " << name << endl;
     }
 
+void saveBalance() {
+        try {
+            ifstream fin("balance.txt");
+            ofstream fout("temp.txt");
+
+            string uid;
+            float bal;
+            bool found = false;
+
+            while (fin >> uid >> bal) {
+                if (uid == ID) {
+                    fout << ID << " " << balance << endl;
+                    found = true;
+                } else {
+                    fout << uid << " " << bal << endl;
+                }
+            }
+
 class Wallet {
 private:
 string walletID;
