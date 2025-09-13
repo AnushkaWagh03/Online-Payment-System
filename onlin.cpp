@@ -168,6 +168,66 @@ void saveBalance() {
                     fout << uid << " " << bal << endl;
                 }
             }
+ if (!found) {
+                fout << ID << " " << balance << endl;
+            }
+
+            fin.close();
+            fout.close();
+
+            remove("balance.txt");
+            rename("temp.txt", "balance.txt");
+        } catch (const exception &e) {
+            cout << e.what() << endl;
+        }
+    }
+
+    void loadBalance() {
+        ifstream fin("balance.txt");
+        if (!fin.is_open()) {
+            balance = 0.0;
+            return;
+        }
+
+        string id;
+        float bal;
+
+        while (fin >> id >> bal) {
+            if (id == ID) {
+                balance = bal;
+                fin.close();
+                return;
+            }
+        }
+        fin.close();
+        balance = 0.0;
+    }
+
+    void receiveMoney(float amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+
+    void addMoney(float amount) {
+        if (amount > 0) {
+            balance += amount;
+            saveBalance();
+            cout << "₹" << amount << " added successfully.\n";
+        } else {
+            cout << "Invalid amount.\n";
+        }
+    }
+
+    void checkBalance() {
+        cout << "Your current balance is ₹" << balance << endl;
+    }
+
+    void syncWallet() {
+        loadBalance();
+    }
+};
+
 class Merchant {
 private:
     string merchantID;
