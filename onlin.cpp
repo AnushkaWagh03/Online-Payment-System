@@ -240,7 +240,7 @@ int main() {
         cout<<"8.Withdraw from wallet: "<<endl;
         cout<<"9.wallet Information: "<<endl;
         cout<<"10.Logout the User: "<<endl;
-      cout<<"11.Logout the merchant: "<<endl;
+        cout<<"11.Logout the merchant: "<<endl;
       cout<<"Enter your choice: ";
       if (cin.fail()) {   // If we enter any wrong choice (like a character instead of number)
     cout << "Wrong choice. Please!!  Enter the choice from 1 to 11" << endl;
