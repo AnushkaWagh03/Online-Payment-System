@@ -134,6 +134,186 @@ class User{  //the one who is using the system(customer)
         }
     };
 
+
+class Wallet {
+private:
+string walletID;
+    string userID;      
+    double balance;
+
+public:
+   Wallet() {
+        walletID = "WALLET000";
+        userID = "";
+        balance = 0.0;
+    }
+ Wallet(string walletID, string userID, double balance = 0.0) {
+        this->walletID = walletID;
+        this->userID = userID;
+        this->balance = balance;
+    }
+  void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            cout << "Deposited " << amount << " successfully.\n";
+            saveToFile();
+        } else {
+            cout << "Invalid amount!\n";
+        }
+    }
+bool withdraw(double amount) {
+        if (amount <= 0) {
+            cout << "Invalid amount!\n";
+            return false;
+        }
+        if (amount > balance) {
+            cout << "Insufficient balance!\n";
+            return false;
+        }
+        balance -= amount;
+        cout << "Withdrew " << amount << " successfully.\n";
+        saveToFile();
+        return true;
+    }
+double getBalance() const {
+        return balance;
+    }
+void saveToFile() {
+        try {
+            ofstream fout("wallets.txt", ios::app);
+            if (!fout) throw runtime_error("Error: Couldn't open the wallet file");
+
+            fout << walletID << " " << userID << " " << balance << endl;
+            fout.close();
+        } catch (const exception &e) {
+            cout << e.what() << endl;
+        }
+    }
+           
+      bool loadWallet(string uID) {
+        try {
+            ifstream fin("wallets.txt");
+            if (!fin.is_open()) throw runtime_error("Error: Can't open the wallet file");
+
+            string fWalletID, fUserID;
+            double fBalance;
+
+            while (fin >> fWalletID >> fUserID >> fBalance) {
+                if (fUserID == userID) {
+                    walletID = fWalletID;
+                    userID = fUserID;
+                    balance = fBalance;
+                    fin.close();
+                    return true;
+                }
+            }
+            fin.close();
+            return false;  // Wallet not found
+        } catch (const exception &e) {
+            cout << e.what() << endl;
+            return false;
+        }
+    }     
+void displayWallet() {
+        cout << " Wallet Info :";
+        cout << "Wallet ID: " << walletID << endl;
+        cout << "User ID: " << userID << endl;
+        cout << "Balance: " << balance << endl;
+    }
+};
 int main() {
+    //object is created user1
+    User user1;
+    Wallet wallet1("W111","C111",1000.0);
+    Customer customer1("C111","Raj","raj@gmail.com",9454782922);
+   Merchant merchant1("M111","Yogesh","yogesh@gmail.com","yogesh8437");
+    int choice;
+    while(1) {
+        cout<<"\n Online Payment System"<<endl;
+        cout<<"1.Registration for User: "<<endl;
+        cout<<"2.Login for User: "<<endl;
+        cout<<"3.Registration for Merchant: "<<endl;
+        cout<<"4.Login for Merchant: "<<endl;
+        cout<<"5.Add Money (Customer) : "<<endl;
+        cout<<"6.Check Balance (Customer): "<<endl;
+        cout<<"7.Deposit in the wallet: "<<endl;
+        cout<<"8.Withdraw from wallet: "<<endl;
+        cout<<"9.wallet Information: "<<endl;
+        cout<<"10.Logout the User: "<<endl;
+      cout<<"11.Logout the merchant: "<<endl;
+      cout<<"Enter your choice: ";
+      if (cin.fail()) {   // If we enter any wrong choice (like a character instead of number)
+    cout << "Wrong choice. Please!!  Enter the choice from 1 to 11" << endl;
+    cin.clear();       
+    cin.ignore(1000, '\n'); 
+    continue;            
+}
+
+      cin>>choice;
+      if(choice==1) {
+        user1.newRegisterUser();
+
+      }
+else if(choice==2) {
+    string uid;
+    string pass;
+    cout<<"Enter the User ID: ";
+    cin>>uid;
+    cout<<"Enter the Password: ";
+    cin>>pass;
+    user1.login(uid,pass);
+
+}
+    else if(choice==3){
+        merchant1.registerMerchant();
+    }
+    else if(choice==4){
+        string merchantid;
+        string merchantpassword;
+        cout<<"Enter the Merchant ID: ";
+        cin>>merchantid;
+        cout<<"Enter the password: ";
+        cin>>merchantpassword;
+        merchant1.login(merchantid,merchantpassword);
+
+
+    }
+    else if(choice==5) {
+        float amnt;
+        cout<<"Enter the amount which you wants to add: ";
+        cin>>amnt;
+        customer1.addMoney(amnt);
+
+    }
+    else if(choice==6) {
+        customer1.checkBalance();
+
+    }
+    else if(choice==7){
+        double amnt;
+        cout<<"Enter the deposit amount: ";
+        cin>>amnt;
+        wallet1.deposit(amnt);
+    }
+    else if(choice==8) {
+        double amnt;
+        cout<<"Enter the withdraw amount: ";
+        cin>>amnt;
+        wallet1.withdraw(amnt);
+        
+    }
+    else if(choice==9){
+        wallet1.displayWallet();
+      
+
+    }
+    else if(choice==10){
+        user1.logOut();
+    }
+    else if(choice==11) {
+        merchant1.logOut();
+    }
+}
     return 0;
+   
 }
