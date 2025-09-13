@@ -134,6 +134,22 @@ class User{  //the one who is using the system(customer)
         }
     };
 
+class Customer : public User {
+private:
+    float balance;
+
+public:
+    Customer() : User() {
+        balance = 0.0;
+    }
+
+    Customer(string ID, string name, string email, long long phoneNo) : User(ID, name, email, phoneNo) {
+        loadBalance();
+    }
+
+    ~Customer() {
+        cout << "Customer object destroyed for: " << name << endl;
+    }
 
 class Wallet {
 private:
