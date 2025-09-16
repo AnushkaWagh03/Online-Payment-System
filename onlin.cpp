@@ -3,23 +3,27 @@
 #include<string>
 using namespace std;
 class User{  //the one who is using the system(customer)
-   public:
+   private:
     string ID;
     string name;
     string email;
-    int phoneNo;
+    long long phoneNo;
 
     protected:
     string password;
+    string role; //Customer/Mercant/Admin
     bool logIn;
 
 
     public:
-    User() {  
+    User() { 
+        //Default constructor 
         //At start never it shoes u have already login first u 
         //need to enter the details and then it shows 
         logIn=false;
+        role="Customer"; //default role
     }
+    //Parametrised  constructor
     User(string ID, string name,string email,int phoneNo){
         this->ID=ID;  //Parametrized constructor
         this->name=name;
@@ -27,112 +31,181 @@ class User{  //the one who is using the system(customer)
         this->email=email;
         this->password=password;
         this->logIn=false;
+        this->role=role;
     }
-    
+    //Destructor
+    ~User() {
+        cout<<"user object with ID"<<ID<< "is being destroyed\n";
+    }
+    //Friend function
+    friend void showDetails(User &u);
 
-    //Registration for the new user
-    void newRegisterUser(){
-        cout<<"Enter User ID: ";
-        cin>>ID;
-        cout<<"Enter Name: ";
-        cin.ignore();
-        getline(cin,name);  //name  cant be continuous by using 
-        //get line two different words input will be taken
-        cout<<"Enter Email-id: ";
-        cin>>email;
-        cout<<"Enter Phone Number: ";
-        cin>>phoneNo;
-        cout<<"Enter Password: ";
-        cin>>password;
+     //New Registration
+  void newRegisterUser() {
+    try{
+    cout<<"Enter User ID: ";
+    cin>>ID;
+cout<<endl;
+cout<<"Enter Name: ";
+cin.ignore();
+getline(cin,name);
+cout<<endl;
+cout<<"Enter Email-ID: ";
+cin>>email;
+cout<<endl;
+cout<<"Enter Phone Number: ";
+if(!(cin >>phoneNo)) {  //will check where the phone no is numeric
+    throw invalid_argument("Phone number must be numeric!");
+}
+cout<<endl;
+cout<<"Enter Password: ";
+cin>>password;
+cout<<endl;
+cout<<"Enter Role: ";
+cout<<"1.Customer\n 2.Merchant\n 3.Admin";
+cin>>role;
+cout<<endl;
 
+saveToFile();
+cout<<"Congragulations!! User has registered successfully";
 
-        void saveToFIle();//will user information in user.txt file
-            cout<<"Congrats! User has registered successfully...";
+  }
+  catch(const exception& e) {
+    cout<<"Registration is failed:"<<e.what() <<endl;
+    cin.clear();
+    cin.ignore(1000,'\n');
+  }
 
-        
+ }
+//Information is saved into the file
+  void saveToFile(){
+    try{
+    ofstream fout("users.txt",ios::app);   //ofstream-writes into the file
+    if(!fout) {            //ios::app- append the file means new date is added down
+        throw runtime_error("Error: Could not open file for saving!");
 
     }
-    void saveToFile() {
-        try{
-            ofstream fout("users.txt", ios::app);//will open file in append mode
-            if(!fout){
-                throw " Error: Coundn't open the file";
-            
-            }
-            fout<<ID << " "<< name<< " "<< email<<" "<< phoneNo <<" "<<password<< endl;
-      fout.close(); //add the above details and close the file
-
-        }
-        catch(const exception& e) {
-            cout<<e.what() << endl;   //will be showing the error
-        }   
-        }
-
-        bool login(string userID, string userPassword){
-            try{
-                ifstream fin("users.txt");
-                if(!fin.is_open()) {
-                    throw runtime_error("Error: Can't open the file");
-                }
-
-                string fID;
-                string fName;
-                string fEmail;
-                string fPassword;
-                string fPhone;
-                bool userFound=false;
-
-
-                
-              while (fin >> fID >> fName >> fEmail >> fPhone >> fPassword) {
-            if (fID == userID) {
-                userFound = true;  // user ID exists
-
-                if (fPassword == userPassword) {
-                    cout << "Login successful! Welcome " << fName << ".\n";
-                    logIn = true;
-                    fin.close();
-                    return true;
-                }
-            }
-        }
-
-        fin.close();
-
-        if (!userFound) {
-            cout << "User not found! Please register first.\n";
-        } else {
-            cout << "Wrong password!\n";
-        }
-    }
-    catch (const exception& e) {
-        cout << e.what() << endl;
-    }
-    return false;
+    fout<<ID<< " "<<name<<" "<<email<<" "<<phoneNo<<" "<<password<<" "<<role<<endl;
+fout.close();
 }
 
-        
+  catch(const exception& e) {
+    cout<<"Save File "<<e.what()<<endl;
+  }
+}
 
+//Login Function
+bool login(string userId, string userPassword) {
+    try {
+        ifstream fin("users.txt");  //ifstream-read the file
+     if(!fin.is_open()) {
+        throw runtime_error("Error: Couldn't open the file for login!");
 
-        void logOut() {
-            if(logIn) {
-                logIn=false;
-                cout<<"Logged out successfully";
-            } 
-            else {
-                cout<<"You are not login ";
+     }
+     string fID;
+     string fName;
+     string fEmail;
+     string fRole;
+     string fPassword;
+     int fPhoneNo;
+     bool userFound=false;
+
+     while(fin>>fID>>fName>>fEmail>>fPhoneNo>>fPassword>>fRole){
+        if(fID==userId) {
+            userFound=true;
+            if(fPassword==userPassword) {
+                cout<<"Login succesfully! Welcome "<<fName<< " ("<<fRole << ").\n";
+                logIn=true;
+                role=fRole;
+                fin.close();
+                return true;
             }
+                else {
+                    throw runtime_error("Wrong Password");
+
+
+                }
+            }
+
+
+        }
+        if(!userFound) {
+            throw runtime_error("User not found! Firstly Please Register");
+
+        }
+        fin.close();
+
+     }
+ catch(const exception& e) {
+        cout<<e.what()<<endl;
+     }
+     return false;
+    }
+
+ //logout
+ void logout() {
+    if(logIn) {
+        logIn=false;
+        cout<<"Logged out successfully \n";
+
+    }else {
+        cout<<"You are not logged in.\n";
+    }
+ }
+
+ //Change Password
+ void changePassword(string oldPassword,string newPassword){
+    try{
+        if(!logIn) {
+            throw runtime_error("You must log in first!!");
         }
 
-        void displayProfile() {
-            cout<<"\n=====User Profile=====";
-            cout<<"User ID: "<<ID<<endl;
-            cout<<"Name: "<<endl;
-            cout<<"Email: "<<endl;
-            cout<<"Phone: "<<endl;
-            
+ if(oldPassword==password) {
+            password=newPassword;
+            cout<<"Password chnage successfully\n";
+
+        } else {
+            throw runtime_error("Old paassword is incorrect");
+
         }
-    };
+        } catch(const exception& e) {
+            cout<<e.what()<<endl;
+        }
+    } 
+    //Role functions
+ void setRole(string newRole) {
+    role=newRole;
+
+ }
+ string getRole(){
+    return role;
+
+ } 
+ bool isAdmin() {
+    return role=="Admin";
+ }
+ bool isCustomer() {
+    return role=="Customer";
+ }
+ bool isMerchant() {
+    return role=="Merchant";
+ }
+
+ //Displaay the profile
+ void displayProfile() {
+    cout<<"\n====User Profile====\n";
+    cout<<"User ID: "<<ID<<endl;
+    cout<<"Name: "<<name<<endl;
+    cout<<"Email: "<<email<<endl;
+    cout<<"Phone: "<<phoneNo<<endl;
+    cout<<"Role: "<<role<<endl;
+
+ }
+};
+//Friend function definition- It is a non-member function which is given special access to class's private and protected members.
+void showDetails(User &u) {
+    cout << "[Friend] User ID: " << u.ID << ", Name: " << u.name << ", Email: " << u.email << endl;
+}
 
 class Customer : public User {
 private:
@@ -227,139 +300,24 @@ void saveBalance() {
         loadBalance();
     }
 };
-class Merchant {
+class Merchant : public User{
 private:
+double earnings;
+double balance;
     string merchantID;
-    string name;
-    string email;
-    string password;
-    bool loggedIn;
+   
 
-    bool isDuplicateID(const string &id) {
-        ifstream fin("merchants.txt");
-        string fID, fName, fEmail, fPass;
-        while (fin >> fID >> fName >> fEmail >> fPass) {
-            if (fID == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-public:
-    Merchant() : loggedIn(false) {}
+   string bussinessName;
 
-    Merchant(string id, string name, string email, string password) {
-        this->merchantID = id;
-        this->name = name;
-        this->email = email;
-        this->password = password;
-        loggedIn = false;
-    }
-    ~Merchant() {
-        cout << "Merchant object destroyed for: " << name << endl;
-    }
-    void registerMerchant() {
-        cout << "\n--- Merchant Registration ---\n";
-        do {
-            cout << "Enter Merchant ID: ";
-            cin >> merchantID;
-            if (merchantID.empty()) {
-                cout << "Merchant ID cannot be empty.\n";
-                continue;
-            }
-            if (isDuplicateID(merchantID)) {
-                cout << "Merchant ID already exists! Please choose another.\n";
-                merchantID.clear();
-            }
-        } while (merchantID.empty());
-
-        cin.ignore();
-        do {
-            cout << "Enter Name: ";
-            getline(cin, name);
-            if (name.empty()) {
-                cout << "Name cannot be empty.\n";
-            }
-        } while (name.empty());
-
-        do {
-            cout << "Enter Email: ";
-            cin >> email;
-            if (email.empty()) {
-                cout << "Email cannot be empty.\n";
-            }
-        } while (email.empty());
-        string confirmPassword;
-        do {
-            cout << "Enter Password: ";
-            cin >> password;
-            cout << "Confirm Password: ";
-            cin >> confirmPassword;
-            if (password.empty()) {
-                cout << "Password cannot be empty.\n";
-            } else if (password != confirmPassword) {
-                cout << "Passwords do not match. Please try again.\n";
-                password.clear();
-            }
-        } while (password.empty() || password != confirmPassword);
-
-        saveToFile();
-        cout << "Merchant registered successfully!\n";
-    }
-    void saveToFile() {
-        try {
-            ofstream fout("merchants.txt", ios::app);
-            if (!fout.is_open()) {
-                throw runtime_error("Error: Could not open merchants.txt");
-            }
-            fout << merchantID << " " << name << " " << email << " " << password << endl;
-        } catch (const exception &e) {
-            cerr << e.what() << endl;
-        }
-    }
-    bool login(const string &id, const string &pass) {
-        try {
-            ifstream fin("merchants.txt");
-            if (!fin.is_open()) {
-                throw runtime_error("Error: Could not open merchants.txt");
-            }
-            string fID, fName, fEmail, fPass;
-            while (fin >> fID >> fName >> fEmail >> fPass) {
-                if (fID == id && fPass == pass) {
-                    loggedIn = true;
-                    merchantID = fID;
-                    name = fName;
-                    email = fEmail;
-                    password = fPass;
-                    cout << "Login successful! Welcome, " << name << ".\n";
-                    return true;
-                }
-            }
-            cout << "Invalid Merchant ID or Password.\n";
-        } catch (const exception &e) {
-            cerr << e.what() << endl;
-        }
-        return false;
-    }
-    void logOut() {
-        if (loggedIn) {
-            loggedIn = false;
-            cout << "Merchant logged out successfully.\n";
-        } else {
-            cout << "Merchant is not logged in.\n";
-        }
-    }
-    void displayProfile() const {
-        if (loggedIn) {
-            cout << "\n--- Merchant Profile ---\n";
-            cout << "Merchant ID : " << merchantID << endl;
-            cout << "Name        : " << name << endl;
-            cout << "Email       : " << email << endl;
-        } else {
-            cout << "Please login to view profile.\n";
-        }
-    }
-};
+   public: 
+   //Default constructor
+   Merchant() : User() {
+    this->merchantID="";
+    this->bussinessName="";
+    this->earnings=0.0;
+    this->balance=0.0;
+    this->setRole("Merchant");
+   }
 class Wallet {
 private:
 string walletID;
