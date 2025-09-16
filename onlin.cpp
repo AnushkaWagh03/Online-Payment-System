@@ -435,7 +435,7 @@ Merchant* merchant1 = new Merchant();
 
       cin>>choice;
       if(choice==1) {
-        user1.newRegisterUser();
+        user1->newRegisterUser();
 
       }
 else if(choice==2) {
@@ -445,11 +445,11 @@ else if(choice==2) {
     cin>>uid;
     cout<<"Enter the Password: ";
     cin>>pass;
-    user1.login(uid,pass);
+    user1->login(uid,pass);
 
 }
-    else if(choice==3){
-        merchant1.registerMerchant();
+    else if(choice=3){
+        merchant1->registerMerchant();
     }
     else if(choice==4){
         string merchantid;
@@ -458,7 +458,7 @@ else if(choice==2) {
         cin>>merchantid;
         cout<<"Enter the password: ";
         cin>>merchantpassword;
-        merchant1.login(merchantid,merchantpassword);
+        merchant1->login(merchantid,merchantpassword);
 
 
     }
@@ -466,36 +466,36 @@ else if(choice==2) {
         float amnt;
         cout<<"Enter the amount which you wants to add: ";
         cin>>amnt;
-        customer1.addMoney(amnt);
+        customer1->addMoney(amnt);
 
     }
     else if(choice==6) {
-        customer1.checkBalance();
+        customer1->checkBalance();
 
     }
     else if(choice==7){
         double amnt;
         cout<<"Enter the deposit amount: ";
         cin>>amnt;
-        wallet1.deposit(amnt);
+        wallet1->deposit(amnt);
     }
     else if(choice==8) {
         double amnt;
         cout<<"Enter the withdraw amount: ";
         cin>>amnt;
-        wallet1.withdraw(amnt);
+        wallet1->withdraw(amnt);
         
     }
     else if(choice==9){
-        wallet1.displayWallet();
+        wallet1->displayWallet();
       
 
     }
     else if(choice==10){
-        user1.logOut();
+        user1->logOut();
     }
     else if(choice==11) {
-        merchant1.logOut();
+        merchant1->logOut();
     }
 }
     return 0;
