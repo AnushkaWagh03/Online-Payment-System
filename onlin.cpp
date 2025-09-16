@@ -406,10 +406,11 @@ void displayWallet() {
 };
 int main() {
     //object is created user1
-    User user1;
-    Wallet wallet1("W111","C111",1000.0);
-    Customer customer1("C111","Raj","raj@gmail.com",9454782922);
-   Merchant merchant1("M111","Yogesh","yogesh@gmail.com","yogesh8437");
+ User* user1 = new User();
+Wallet* wallet1 = new Wallet("W111", "C111", 1000.0);
+Customer* customer1 = new Customer("C111", "Raj", "raj@gmail.com", 9454782922);
+Merchant* merchant1 = new Merchant();
+);
     int choice;
     while(1) {
         cout<<"\n Online Payment System"<<endl;
