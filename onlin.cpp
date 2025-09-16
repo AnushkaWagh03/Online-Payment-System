@@ -212,8 +212,8 @@ private:
     float balance;
 
 public:
-// default constructor
-    Customer() : User() {
+// default constructor with default arguments
+    Customer(string ID="C001",string name="Defaultcustomer",string email="un@gmail.com",long long phoneNo=0) : User(ID,name,email,phoneNo) {
         balance = 0.0;
     }
 
@@ -410,7 +410,7 @@ void displayWallet() {
     }
 };
 int main() {
-    //object is created user1
+    //object is created user1 using dynamic memory allocation
  User* user1 = new User();
 Wallet* wallet1 = new Wallet("W111", "C111", 1000.0);
 Customer* customer1 = new Customer("C111", "Raj", "raj@gmail.com", 9454782922);
