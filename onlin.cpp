@@ -1,4 +1,4 @@
-#include<iostream>
+fault#include<iostream>
 #include<fstream> //header file used for file
 #include<string>
 using namespace std;
@@ -212,7 +212,7 @@ private:
     float balance;
 
 public:
-// constructor
+// default constructor
     Customer() : User() {
         balance = 0.0;
     }
