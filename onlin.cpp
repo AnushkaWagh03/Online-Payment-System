@@ -212,6 +212,7 @@ private:
     float balance;
 
 public:
+// constructor
     Customer() : User() {
         balance = 0.0;
     }
@@ -219,11 +220,12 @@ public:
     Customer(string ID, string name, string email, long long phoneNo) : User(ID, name, email, phoneNo) {
         loadBalance();
     }
-
+// destrudctor
     ~Customer() {
         cout << "Customer object destroyed for: " << name << endl;
     }
 
+// save balance change after payment add money
 void saveBalance() {
         try {
             ifstream fin("balance.txt");
@@ -255,6 +257,7 @@ void saveBalance() {
         }
     }
 
+// 
     void loadBalance() {
         ifstream fin("balance.txt");
         if (!fin.is_open()) {
@@ -300,6 +303,8 @@ void saveBalance() {
         loadBalance();
     }
 };
+
+
 class Merchant : public User{
 private:
 double earnings;
@@ -498,6 +503,13 @@ else if(choice==2) {
         merchant1->logOut();
     }
 }
+
+   // deallocate memory
+delete user1;
+delete wallet1;
+delete customer1;
+delete merchant1;
+
     return 0;
    
 }
