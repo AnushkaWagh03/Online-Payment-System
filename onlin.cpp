@@ -1,6 +1,7 @@
 #include<iostream>
 #include<fstream> //header file used for file
 #include<string>
+
 using namespace std;
 class User{  //the one who is using the system(customer)
    private:
@@ -441,9 +442,9 @@ Merchant* merchant1 = new Merchant();
       cin>>choice;
       if(choice==1) {
         user1->newRegisterUser();
-
       }
-else if(choice==2) {
+         
+    else if(choice==2) {
     string uid;
     string pass;
     cout<<"Enter the User ID: ";
@@ -452,7 +453,7 @@ else if(choice==2) {
     cin>>pass;
     user1->login(uid,pass);
 
-}
+  }
     else if(choice=3){
         merchant1->registerMerchant();
     }
