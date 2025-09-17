@@ -1,4 +1,4 @@
-fault#include<iostream>
+#include<iostream>
 #include<fstream> //header file used for file
 #include<string>
 using namespace std;
