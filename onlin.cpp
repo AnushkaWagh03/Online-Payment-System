@@ -454,7 +454,7 @@ Merchant* merchant1 = new Merchant();
     user1->login(uid,pass);
 
   }
-    else if(choice=3){
+    else if(choice==3){
         merchant1->registerMerchant();
     }
     else if(choice==4){
