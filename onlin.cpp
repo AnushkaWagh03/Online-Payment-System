@@ -1,7 +1,11 @@
 #include<iostream>
 #include<fstream> //header file used for file
 #include<string>
+<<<<<<< HEAD
 #include <ctime>
+=======
+
+>>>>>>> 40bbad12abb56e79caec398adbf910b7f4898d35
 using namespace std;
 class User{  //the one who is using the system(customer)
    private:
@@ -453,6 +457,64 @@ void saveToFile() {
         return this->balance == other.balance;
     }
 };
+<<<<<<< HEAD
+=======
+int main() {
+    //object is created user1 using dynamic memory allocation
+ User* user1 = new User();
+Wallet* wallet1 = new Wallet("W111", "C111", 1000.0);
+Customer* customer1 = new Customer("C111", "Raj", "raj@gmail.com", 9454782922);
+Merchant* merchant1 = new Merchant();
+);
+    int choice;
+    while(1) {
+        cout<<"\n Online Payment System"<<endl;
+        cout<<"1.Registration for User: "<<endl;
+        cout<<"2.Login for User: "<<endl;
+        cout<<"3.Registration for Merchant: "<<endl;
+        cout<<"4.Login for Merchant: "<<endl;
+        cout<<"5.Add Money (Customer) : "<<endl;
+        cout<<"6.Check Balance (Customer): "<<endl;
+        cout<<"7.Deposit in the wallet: "<<endl;
+        cout<<"8.Withdraw from wallet: "<<endl;
+        cout<<"9.wallet Information: "<<endl;
+        cout<<"10.Logout the User: "<<endl;
+        cout<<"11.Logout the merchant: "<<endl;
+      cout<<"Enter your choice: ";
+      if (cin.fail()) {   // If we enter any wrong choice (like a character instead of number)
+    cout << "Wrong choice. Please!!  Enter the choice from 1 to 11" << endl;
+    cin.clear();       
+    cin.ignore(1000, '\n'); 
+    continue;            
+}
+
+      cin>>choice;
+      if(choice==1) {
+        user1->newRegisterUser();
+      }
+         
+    else if(choice==2) {
+    string uid;
+    string pass;
+    cout<<"Enter the User ID: ";
+    cin>>uid;
+    cout<<"Enter the Password: ";
+    cin>>pass;
+    user1->login(uid,pass);
+
+  }
+    else if(choice==3){
+        merchant1->registerMerchant();
+    }
+    else if(choice==4){
+        string merchantid;
+        string merchantpassword;
+        cout<<"Enter the Merchant ID: ";
+        cin>>merchantid;
+        cout<<"Enter the password: ";
+        cin>>merchantpassword;
+        merchant1->login(merchantid,merchantpassword);
+>>>>>>> 40bbad12abb56e79caec398adbf910b7f4898d35
 
 
 class Payment {
