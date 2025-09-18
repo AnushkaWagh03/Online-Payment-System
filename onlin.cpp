@@ -562,7 +562,7 @@ int main() {
 int choice;
 
 while (true) {
-    cout << "\n==== Online Payment System ====\n";
+    cout << "\n\t\t Online Payment System \t\t\n";
     cout << "1. Register User\n";
     cout << "2. Login User\n";
     cout << "3. Register Merchant\n";
