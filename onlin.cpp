@@ -45,41 +45,51 @@ class User{  //the one who is using the system(customer)
 
      //New Registration
   void newRegisterUser() {
-    try{
-    cout<<"Enter User ID: ";
-    cin>>ID;
-cout<<endl;
-cout<<"Enter Name: ";
-cin.ignore();
-getline(cin,name);
-cout<<endl;
-cout<<"Enter Email-ID: ";
-cin>>email;
-cout<<endl;
-cout<<"Enter Phone Number: ";
-if(!(cin >>phoneNo)) {  //will check where the phone no is numeric
-    throw invalid_argument("Phone number must be numeric!");
+    try {
+        cout << "Enter User ID: ";
+        cin >> ID;
+        cin.ignore(); // clear buffer
+
+        cout << "Enter Name: ";
+        getline(cin, name); // allows spaces
+
+        // validate email
+        do {
+            cout << "Enter Email-ID: ";
+            getline(cin, email);
+            if (!isValidEmail(email)) {
+                cout << "Invalid Email! Please enter a valid email.\n";
+            }
+        } while (!isValidEmail(email));
+
+        // validate phone
+        string phoneStr;
+        do {
+            cout << "Enter Phone Number: ";
+            cin >> phoneStr;
+            if (!isValidPhone(phoneStr)) {
+                cout << "Invalid Phone Number! Enter a 10-digit number.\n";
+            }
+        } while (!isValidPhone(phoneStr));
+        phoneNo = stoll(phoneStr);
+
+        cout << "Enter Password: ";
+        cin >> password;
+
+        cout << "Enter Role: ";
+        cout << "1. Customer\n2. Merchant\n3. Admin\n";
+        cin >> role;
+
+        saveToFile();
+        cout << "Congratulations!! User has registered successfully\n";
+    }
+    catch (const exception& e) {
+        cout << "Registration is failed: " << e.what() << endl;
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
 }
-cout<<endl;
-cout<<"Enter Password: ";
-cin>>password;
-cout<<endl;
-cout<<"Enter Role: ";
-cout<<"1.Customer\n 2.Merchant\n 3.Admin";
-cin>>role;
-cout<<endl;
 
-saveToFile();
-cout<<"Congragulations!! User has registered successfully";
-
-  }
-  catch(const exception& e) {
-    cout<<"Registration is failed:"<<e.what() <<endl;
-    cin.clear();
-    cin.ignore(1000,'\n');
-  }
-
- }
 //Information is saved into the file
   void saveToFile(){
     try{
