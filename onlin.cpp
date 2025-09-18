@@ -459,8 +459,8 @@ void saveToFile() {
         return this->balance == other.balance;
     }
 };
-<<<<<<< HEAD
-=======
+
+
 int main() {
     //object is created user1 using dynamic memory allocation
  User* user1 = new User();
@@ -516,7 +516,6 @@ Merchant* merchant1 = new Merchant();
         cout<<"Enter the password: ";
         cin>>merchantpassword;
         merchant1->login(merchantid,merchantpassword);
->>>>>>> 40bbad12abb56e79caec398adbf910b7f4898d35
 
 
 class Payment {
