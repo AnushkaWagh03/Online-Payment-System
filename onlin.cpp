@@ -536,34 +536,6 @@ public:
     }
 
    
-    void refundPayment() {
-        if (this->status == "Success") {
-            this->status = "Refunded";
-            cout << "Refund of ₹" << this->amount
-                 << " done to " << this->senderId << endl;
-        } else {
-            cout << "Refund not possible! Transaction was not successful.\n";
-        }
-    }
-
-   
-    void refundPayment(double refundAmount) {
-        if (this->status == "Success" && refundAmount > 0 && refundAmount <= this->amount) {
-            cout << "Partial Refund of ₹" << refundAmount
-                 << " done to " << this->senderId << endl;
-            this->status = "Partially Refunded";
-        } else {
-            cout << "Partial refund not possible!\n";
-        }
-    }
-
-   
-
-    // Get Payment Status
-    string getPaymentStatus() {
-        return this->status;
-    }
-
    
     void getPaymentDetails() {
         cout << "\n==== Payment Details ====\n";
