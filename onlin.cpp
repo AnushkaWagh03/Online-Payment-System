@@ -1,11 +1,9 @@
 #include<iostream>
 #include<fstream> //header file used for file
 #include<string>
-<<<<<<< HEAD
 #include <ctime>
 =======
 
->>>>>>> 40bbad12abb56e79caec398adbf910b7f4898d35
 using namespace std;
 class User{  //the one who is using the system(customer)
    private:
@@ -276,7 +274,8 @@ void saveBalance() {
         }
     }
 
-// 
+// load exiting balance 
+// when coustomer logs in
     void loadBalance() {
         ifstream fin("balance.txt");
         if (!fin.is_open()) {
@@ -298,12 +297,14 @@ void saveBalance() {
         balance = 0.0;
     }
 
+// increace money after receving money
     void receiveMoney(float amount) {
         if (amount > 0) {
             balance += amount;
         }
     }
 
+// add money to wallet
     void addMoney(float amount) {
         if (amount > 0) {
             balance += amount;
@@ -318,6 +319,7 @@ void saveBalance() {
         cout << "Your current balance is ₹" << balance << endl;
     }
 
+// if money updated then reloads correct value
     void syncWallet() {
         loadBalance();
     }
