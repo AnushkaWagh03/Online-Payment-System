@@ -1,12 +1,9 @@
 #include<iostream>
 #include<fstream> //header file used for file
 #include<string>
-<<<<<<< HEAD
 #include <ctime>
-=======
-
->>>>>>> 40bbad12abb56e79caec398adbf910b7f4898d35
 using namespace std;
+
 class User{  //the one who is using the system(customer)
    private:
     string ID;
@@ -19,18 +16,17 @@ class User{  //the one who is using the system(customer)
     string role; //Customer/Mercant/Admin
     bool logIn;
 
-
     public:
     User() { 
         //Default constructor 
-        //At start never it shoes u have already login first u 
+        //At start never it shows u have already login first u 
         //need to enter the details and then it shows 
         logIn=false;
         role="Customer"; //default role
     }
     //Parametrised  constructor
     User(string ID, string name,string email,long long phoneNo,string password="",string role="Customer"){
-        this->ID=ID;  //Parametrized constructor
+        this->ID=ID;  
         this->name=name;
         this->phoneNo=phoneNo;
         this->email=email;
@@ -40,59 +36,57 @@ class User{  //the one who is using the system(customer)
     }
     //Destructor
     ~User() {
-        cout<<"user object with ID"<<ID<< "is being destroyed\n";
+        cout<<"user object with ID "<<ID<< " is being destroyed\n";
     }
     //Friend function
     friend void showDetails(User &u);
 
      //New Registration
-  void newRegisterUser() {
-    try{
-    cout<<"Enter User ID: ";
-    cin>>ID;
-cout<<endl;
-cout<<"Enter Name: ";
-cin.ignore();
-getline(cin,name);
-cout<<endl;
-cout<<"Enter Email-ID: ";
-cin>>email;
-cout<<endl;
-cout<<"Enter Phone Number: ";
-if(!(cin >>phoneNo)) {  //will check where the phone no is numeric
-    throw invalid_argument("Phone number must be numeric!");
+ void newRegisterUser() {
+    try {
+        cout << "Enter User ID: ";
+        cin >> ID;
+        cin.ignore(); // clear buffer
+
+        cout << "Enter Name: ";
+        getline(cin, name); // allows spaces
+
+        cout << "Enter Email-ID: ";
+        getline(cin, email); // FIXED: now allows spaces
+
+        cout << "Enter Phone Number: ";
+        if (!(cin >> phoneNo)) {
+            throw invalid_argument("Phone number must be numeric!");
+        }
+        cin.ignore(); // clear buffer after phone number
+
+        cout << "Enter Password: ";
+        cin >> password;
+
+        cout << "Enter Role: ";
+        cout << "1. Customer\n2. Merchant\n3. Admin\n";
+        cin >> role;
+
+        saveToFile();
+        cout << "Congratulations!! User has registered successfully\n";
+    }
+    catch (const exception& e) {
+        cout << "Registration is failed: " << e.what() << endl;
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
 }
-cout<<endl;
-cout<<"Enter Password: ";
-cin>>password;
-cout<<endl;
-cout<<"Enter Role: ";
-cout<<"1.Customer\n 2.Merchant\n 3.Admin";
-cin>>role;
-cout<<endl;
 
-saveToFile();
-cout<<"Congragulations!! User has registered successfully";
-
-  }
-  catch(const exception& e) {
-    cout<<"Registration is failed:"<<e.what() <<endl;
-    cin.clear();
-    cin.ignore(1000,'\n');
-  }
-
- }
 //Information is saved into the file
   void saveToFile(){
     try{
     ofstream fout("users.txt",ios::app);   //ofstream-writes into the file
     if(!fout) {            //ios::app- append the file means new date is added down
         throw runtime_error("Error: Could not open file for saving!");
-
     }
     fout<<ID<< " "<<name<<" "<<email<<" "<<phoneNo<<" "<<password<<" "<<role<<endl;
-fout.close();
-}
+    fout.close();
+  }
 
   catch(const exception& e) {
     cout<<"Save File "<<e.what()<<endl;
@@ -105,21 +99,20 @@ bool login(string userId, string userPassword) {
         ifstream fin("users.txt");  //ifstream-read the file
      if(!fin.is_open()) {
         throw runtime_error("Error: Couldn't open the file for login!");
-
      }
      string fID;
      string fName;
      string fEmail;
      string fRole;
      string fPassword;
-     int fPhoneNo;
+     long long fPhoneNo; // fixed type
      bool userFound=false;
 
      while(fin>>fID>>fName>>fEmail>>fPhoneNo>>fPassword>>fRole){
         if(fID==userId) {
             userFound=true;
             if(fPassword==userPassword) {
-                cout<<"Login succesfully! Welcome "<<fName<< " ("<<fRole << ").\n";
+                cout<<"Login successfully! Welcome "<<fName<< " ("<<fRole << ").\n";
                 logIn=true;
                 role=fRole;
                 fin.close();
@@ -127,19 +120,13 @@ bool login(string userId, string userPassword) {
             }
                 else {
                     throw runtime_error("Wrong Password");
-
-
                 }
             }
-
-
         }
         if(!userFound) {
-            throw runtime_error("User not found! Firstly Please Register");
-
+            throw runtime_error("User doesn't exit.Please register First!!");
         }
         fin.close();
-
      }
  catch(const exception& e) {
         cout<<e.what()<<endl;
@@ -152,7 +139,6 @@ bool login(string userId, string userPassword) {
     if(logIn) {
         logIn=false;
         cout<<"Logged out successfully \n";
-
     }else {
         cout<<"You are not logged in.\n";
     }
@@ -167,10 +153,10 @@ bool login(string userId, string userPassword) {
 
  if(oldPassword==password) {
             password=newPassword;
-            cout<<"Password chnage successfully\n";
+            cout<<"Password changed successfully\n";
 
         } else {
-            throw runtime_error("Old paassword is incorrect");
+            throw runtime_error("Old password is incorrect");
 
         }
         } catch(const exception& e) {
@@ -180,11 +166,9 @@ bool login(string userId, string userPassword) {
     //Role functions
  void setRole(string newRole) {
     role=newRole;
-
  }
  string getRole(){
     return role;
-
  } 
  bool isAdmin() {
     return role=="Admin";
@@ -196,15 +180,14 @@ bool login(string userId, string userPassword) {
     return role=="Merchant";
  }
 
- //Displaay the profile
+ //Display the profile
  void displayProfile() {
-    cout<<"\n====User Profile====\n";
+    cout<<"\nUser Profile\n";
     cout<<"User ID: "<<ID<<endl;
     cout<<"Name: "<<name<<endl;
     cout<<"Email: "<<email<<endl;
     cout<<"Phone: "<<phoneNo<<endl;
     cout<<"Role: "<<role<<endl;
-
  }
  // Getter for User ID
 string getID() const {
@@ -215,7 +198,7 @@ string getName() const {
 }
 };
 
-//Friend function definition- It is a non-member function which is given special access to class's private and protected members.
+//Friend function definition
 void showDetails(User &u) {
     cout << "[Friend] User ID: " << u.ID << ", Name: " << u.name << ", Email: " << u.email << endl;
 }
@@ -226,7 +209,6 @@ private:
     float balance;
 
 public:
-// default constructor with default arguments
     Customer() : User("C001","Defaultcustomer","un@gmail.com",0,"","Customer") {
     balance = 0.0;
 }
@@ -236,105 +218,107 @@ Customer(string ID, string name, string email, long long phoneNo)
     loadBalance();
 }
 
-  
-// destrudctor
-    ~Customer() {
-        cout << "Customer object destroyed for: " << getName() << endl;
-    }
-   
-
+~Customer() {
+    cout << "Customer object destroyed for: " << getName() << endl;
+}
+//Inline function- is defined in class tells compiler instead of jumping to function's code 
+//during a call, directly insert the function's body where it is called
+inline float getBalance()const {
+    return balance;
+}
+inline void setBalance(float amount) {
+    balance=amount;
+}
+inline void incremenetBalance(float amount) {
+    balance+=amount;
+}
 
 // save balance change after payment add money
 void saveBalance() {
-        try {
-            ifstream fin("balance.txt");
-            ofstream fout("temp.txt");
+    try {
+        ifstream fin("balance.txt");
+        ofstream fout("temp.txt");
 
-            string uid;
-            float bal;
-            bool found = false;
+        string uid;
+        float bal;
+        bool found = false;
 
-            while (fin >> uid >> bal) {
-                if (uid == getID()) {
-                    fout << getID() << " " << balance << endl;
-                    found = true;
-                } else {
-                    fout << uid << " " << bal << endl;
-                }
-            }
- if (!found) {
+        while (fin >> uid >> bal) {
+            if (uid == getID()) {
                 fout << getID() << " " << balance << endl;
+                found = true;
+            } else {
+                fout << uid << " " << bal << endl;
             }
-
-            fin.close();
-            fout.close();
-
-            remove("balance.txt");
-            rename("temp.txt", "balance.txt");
-        } catch (const exception &e) {
-            cout << e.what() << endl;
         }
+        if (!found) {
+            fout << getID() << " " << balance << endl;
+        }
+
+        fin.close();
+        fout.close();
+
+        remove("balance.txt");
+        rename("temp.txt", "balance.txt");
+    } catch (const exception &e) {
+        cout << e.what() << endl;
+    }
+}
+
+void loadBalance() {
+    ifstream fin("balance.txt");
+    if (!fin.is_open()) {
+        balance = 0.0;
+        return;
     }
 
-// 
-    void loadBalance() {
-        ifstream fin("balance.txt");
-        if (!fin.is_open()) {
-            balance = 0.0;
+    string id;
+    float bal;
+
+    while (fin >> id >> bal) {
+        if (id == getID()) {
+            balance = bal;
+            fin.close();
             return;
         }
-
-        string id;
-        float bal;
-
-        while (fin >> id >> bal) {
-            if (id == getID()) {
-                balance = bal;
-                fin.close();
-                return;
-            }
-        }
-        fin.close();
-        balance = 0.0;
     }
+    fin.close();
+    balance = 0.0;
+}
 
-    void receiveMoney(float amount) {
-        if (amount > 0) {
-            balance += amount;
-        }
+void receiveMoney(float amount) {
+    if (amount > 0) {
+        balance += amount;
     }
+}
 
-    void addMoney(float amount) {
-        if (amount > 0) {
-            balance += amount;
-            saveBalance();
-            cout << "₹" << amount << " added successfully.\n";
-        } else {
-            cout << "Invalid amount.\n";
-        }
+void addMoney(float amount) {
+    if (amount > 0) {
+        balance += amount;
+        saveBalance();
+        cout << "₹" << amount << " added successfully.\n";
+    } else {
+        cout << "Invalid amount.\n";
     }
+}
 
-    void checkBalance() {
-        cout << "Your current balance is ₹" << balance << endl;
-    }
+void checkBalance() {
+    cout << "Your current balance is ₹" << balance << endl;
+}
 
-    void syncWallet() {
-        loadBalance();
-    }
+void syncWallet() {
+    loadBalance();
+}
 };
 
-//Inheritance is used
 class Merchant : public User{
 private:
 double earnings;
 double balance;
-    string merchantID;
-   
+string merchantID;
+string bussinessName;
 
-   string bussinessName;
-
-   public: 
-   //Default constructor
+public: 
    Merchant() : User() {
     this->merchantID="";
     this->bussinessName="";
@@ -342,12 +326,18 @@ double balance;
     this->balance=0.0;
     this->setRole("Merchant");
    }
+
+   // Add missing function for registration
+   void newRegisterUser() {
+       User::newRegisterUser();  // reuse base class registration
+   }
 };
+
 class Wallet {
 private:
 string walletID;
-    string userID;      
-    double balance;
+string userID;      
+double balance;
 
 public:
    Wallet() {
@@ -422,19 +412,16 @@ void saveToFile() {
             return false;
         }
     }     
-//Operator overloading
-//These will print wallet details  directly using cout  Wallet w1("W1","U1",1000)     cout<<w1    these will print wallet information
- friend ostream& operator<<(ostream& out, const Wallet& w) {
-        out << "\n==== Wallet Info ====\n";
+//Operator overloading  but in function overloading the files details wont be save 
+friend ostream& operator<<(ostream& out, const Wallet& w) {
+        out << "\nWallet Info\n";
         out << "Wallet ID: " << w.walletID << endl;
         out << "User ID: " << w.userID << endl;
         out << "Balance: " << w.balance << endl;
         return out;
     }
 
-    //+ operator will add money to the wallet
-
-    Wallet operator+(double amount) const {
+Wallet operator+(double amount) const {
         Wallet temp = *this;  
         if (amount > 0) {
             temp.balance += amount;
@@ -442,9 +429,7 @@ void saveToFile() {
         return temp;
     }
 
-    //- operator will withdraw the money from the wallet
-    //the same work is done by withdraw function but if we use opearor overloading the details won't be save 
-    Wallet operator-(double amount) const {
+Wallet operator-(double amount) const {
         Wallet temp = *this;
         if (amount > 0 && amount <= temp.balance) {
             temp.balance -= amount;
@@ -452,69 +437,10 @@ void saveToFile() {
         return temp;
     }
 
-    // Compare two wallets by balance
-    bool operator==(const Wallet& other) const {
+bool operator==(const Wallet& other) const {
         return this->balance == other.balance;
     }
 };
-<<<<<<< HEAD
-=======
-int main() {
-    //object is created user1 using dynamic memory allocation
- User* user1 = new User();
-Wallet* wallet1 = new Wallet("W111", "C111", 1000.0);
-Customer* customer1 = new Customer("C111", "Raj", "raj@gmail.com", 9454782922);
-Merchant* merchant1 = new Merchant();
-);
-    int choice;
-    while(1) {
-        cout<<"\n Online Payment System"<<endl;
-        cout<<"1.Registration for User: "<<endl;
-        cout<<"2.Login for User: "<<endl;
-        cout<<"3.Registration for Merchant: "<<endl;
-        cout<<"4.Login for Merchant: "<<endl;
-        cout<<"5.Add Money (Customer) : "<<endl;
-        cout<<"6.Check Balance (Customer): "<<endl;
-        cout<<"7.Deposit in the wallet: "<<endl;
-        cout<<"8.Withdraw from wallet: "<<endl;
-        cout<<"9.wallet Information: "<<endl;
-        cout<<"10.Logout the User: "<<endl;
-        cout<<"11.Logout the merchant: "<<endl;
-      cout<<"Enter your choice: ";
-      if (cin.fail()) {   // If we enter any wrong choice (like a character instead of number)
-    cout << "Wrong choice. Please!!  Enter the choice from 1 to 11" << endl;
-    cin.clear();       
-    cin.ignore(1000, '\n'); 
-    continue;            
-}
-
-      cin>>choice;
-      if(choice==1) {
-        user1->newRegisterUser();
-      }
-         
-    else if(choice==2) {
-    string uid;
-    string pass;
-    cout<<"Enter the User ID: ";
-    cin>>uid;
-    cout<<"Enter the Password: ";
-    cin>>pass;
-    user1->login(uid,pass);
-
-  }
-    else if(choice==3){
-        merchant1->registerMerchant();
-    }
-    else if(choice==4){
-        string merchantid;
-        string merchantpassword;
-        cout<<"Enter the Merchant ID: ";
-        cin>>merchantid;
-        cout<<"Enter the password: ";
-        cin>>merchantpassword;
-        merchant1->login(merchantid,merchantpassword);
->>>>>>> 40bbad12abb56e79caec398adbf910b7f4898d35
 
 
 class Payment {
@@ -534,7 +460,6 @@ private:
     }
 
 public:
-    // Default Constructor
     Payment() {
         this->paymentId = "";
         this->senderId = "";
@@ -544,7 +469,6 @@ public:
         this->dateTime = getCurrentDateTime();
     }
 
-    // Parameterized Constructor
     Payment(string paymentId, string senderId, string receiverId, double amount) {
         this->paymentId = paymentId;
         this->senderId = senderId;
@@ -554,14 +478,10 @@ public:
         this->dateTime = getCurrentDateTime();
     }
 
-    // Destructor
     ~Payment() {
         cout << "Payment object with ID " << this->paymentId << " is destroyed.\n";
     }
 
-  
-
-  //Funcion overloading- multiple function with same name but different parameter list 
     void processPayment() {
         if (this->amount > 0) {
             this->status = "Success";
@@ -590,8 +510,7 @@ public:
             cout << "Payment Failed! Invalid amount.\n";
         }
     }
-
-   
+//Function overloading
     void refundPayment() {
         if (this->status == "Success") {
             this->status = "Refunded";
@@ -602,7 +521,6 @@ public:
         }
     }
 
-   
     void refundPayment(double refundAmount) {
         if (this->status == "Success" && refundAmount > 0 && refundAmount <= this->amount) {
             cout << "Partial Refund of ₹" << refundAmount
@@ -613,16 +531,12 @@ public:
         }
     }
 
-   
-
-    // Get Payment Status
     string getPaymentStatus() {
         return this->status;
     }
 
-   
     void getPaymentDetails() {
-        cout << "\n==== Payment Details ====\n";
+        cout << "\n Payment Details\n";
         cout << "Payment ID  : " << this->paymentId << endl;
         cout << "Sender ID   : " << this->senderId << endl;
         cout << "Receiver ID : " << this->receiverId << endl;
@@ -633,20 +547,24 @@ public:
 };
 
 
-
 int main() {
-    // Create objects
+    //dynamic memory allocated
     User* user1 = new User();
-    Customer* customer1 = new Customer("C111", "Raj", "raj@gmail.com", 9876543210);
+    //allocating the memory using malloc - allocates the memory, but memory is 
+    //unintialized whaich can contain garbage values
+    Customer* customer1=(Customer*) malloc(sizeof(Customer));
+    new(customer1) Customer("C111","Ram","ram@gmail.com",9567845369);
     Merchant* merchant1 = new Merchant();
-    Wallet* wallet1 = new Wallet("W111", "C111", 1000.0);
+    //Calloc-ensures all byted start at 0, gives slight safe memory before the constructor runs
+   Wallet* wallet1=(Wallet*) calloc(1,sizeof(Wallet));
+   new(wallet1)Wallet("W111","C111",1000.0);
     Payment* payment1 = new Payment();
 
  string input;
-int choice;
+ int choice;
 
-while (true) {
-    cout << "\n==== Online Payment System ====\n";
+ while (true) {
+    cout << "\nOnline Payment System\n";
     cout << "1. Register User\n";
     cout << "2. Login User\n";
     cout << "3. Register Merchant\n";
@@ -665,7 +583,6 @@ while (true) {
     cout << "Enter your choice (0-13): ";
     cin >> input;
 
-    // Check if the input is fully numeric
     bool isNumber = !input.empty();
     for (char c : input) {
         if (!isdigit(c)) {
@@ -676,20 +593,18 @@ while (true) {
 
     if (!isNumber) {
         cout << "Invalid input! Please enter a number from 0 to 13 only.\n";
-        continue; // reject non-numeric input
+        continue;
     }
 
    choice = stoi(input);
 
-    // Check range
     if (choice < 0 || choice > 13) {
         cout << "Choice out of range! Please enter a number from 0 to 13 only.\n";
         continue;
     }
 
-    if (choice == 0) break; // Exit
+    if (choice == 0) break;
 
-    // Switch-case safely
     switch (choice) {
         case 1: user1->newRegisterUser(); break;
         case 2: {
@@ -740,5 +655,13 @@ while (true) {
         case 12: user1->logout(); break;
         case 13: merchant1->logout(); break;
     }
-}
-}
+ }
+
+ delete user1;
+ delete customer1;
+ delete merchant1;
+ delete wallet1;
+ delete payment1;
+
+ 
+
