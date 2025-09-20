@@ -550,14 +550,10 @@ public:
 int main() {
     //dynamic memory allocated
     User* user1 = new User();
-    //allocating the memory using malloc - allocates the memory, but memory is 
-    //unintialized whaich can contain garbage values
-    Customer* customer1=(Customer*) malloc(sizeof(Customer));
-    new(customer1) Customer("C111","Ram","ram@gmail.com",9567845369);
+   Customer* customer1=new Customer();
+    
     Merchant* merchant1 = new Merchant();
-    //Calloc-ensures all byted start at 0, gives slight safe memory before the constructor runs
-   Wallet* wallet1=(Wallet*) calloc(1,sizeof(Wallet));
-   new(wallet1)Wallet("W111","C111",1000.0);
+    Wallet* wallet1=new Wallet();
     Payment* payment1 = new Payment();
 
  string input;
@@ -663,5 +659,6 @@ int main() {
  delete wallet1;
  delete payment1;
 
- 
+ return 0;
+}
 
