@@ -235,6 +235,20 @@ saveSecurityQA();
     } catch (...) {
   }
 }
+void saveSecurityQA() {
+    try {
+        ofstream fout("security.csv", ios::app);
+        if (!fout) return;
+
+        string encQ = encryptPassword(securityQuestion);
+        string encA = encryptPassword(securityAnswer);
+
+        fout << userID << "," << encQ << "," << encA << endl;
+        fout.close();
+    } catch (const exception &e) {
+        cout << "Error saving security Q&A.\n";
+    }
+}
 
 static User getUser(const string &uid) {
     try {
