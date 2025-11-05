@@ -65,6 +65,61 @@ bool isValidPhone(const string &ph) {
         p == "6666666666" || p == "7777777777" || p == "8888888888" ||
         p == "9999999999")
         return false;
+ bool allZeroAfterFirst = true;
+    for (size_t i = 1; i < p.size(); ++i) {
+        if (p[i] != '0') {
+            allZeroAfterFirst = false;
+            break;
+        }
+    }
+    if (allZeroAfterFirst)
+        return false;
+
+    return true;
+}
+
+bool isValidName(const string &nm) {
+    if (nm.empty()) return false;
+    for (char c : nm) {
+        if (!isalpha(c) && c != ' ')  
+            return false;
+    }
+    return true;
+}
+
+    bool isStrongPassword(const string &pwd) {
+        if(pwd.length() < 8) return false;
+        bool hasUpper=false, hasLower=false, hasDigit=false, hasSpecial=false;
+        for(char c : pwd){
+            if(isupper((unsigned char)c)) hasUpper=true;
+            else if(islower((unsigned char)c)) hasLower=true;
+            else if(isdigit((unsigned char)c)) hasDigit=true;
+            else hasSpecial=true;
+        }
+        return hasUpper && hasLower && hasDigit && hasSpecial;
+    }
+ bool isValidUserID(const string &uid) {
+        if(uid.length() < 8) return false;
+        bool hasLetter=false, hasDigit=false;
+        for(char c : uid){
+            if(isalpha((unsigned char)c)) hasLetter=true;
+            else if(isdigit((unsigned char)c)) hasDigit=true;
+        }
+        return hasLetter && hasDigit;
+    }
+static bool exists(const string &uid) {
+    ifstream fin("users.csv");
+    if (!fin.is_open()) return false;
+    string line;
+    while (getline(fin, line)) {
+        stringstream ss(line);
+        string fID;
+        getline(ss, fID, ',');
+        if (fID == uid) return true;
+    }
+    return false;
+}
+
 
 
 
