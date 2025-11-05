@@ -803,6 +803,170 @@ int main() {
                 break; 
             }
 
- 
+           if(choice==0) break;
+if(choice==1){
+    currentUser->newRegisterUser(); 
+    *currentWallet = Wallet(currentUser->userID, 0);
+    currentWallet->saveToFile();
+    *currentBank = BankAccount(currentUser->userID, 1000);
+    currentBank->saveToFile();
+}
+
+            else if(choice==2){
+                string uid,pwd;
+                cout<<"User ID: "; cin>>uid;
+                if(!User::exists(uid)){ cout<<"User not found!\n"; continue; }
+                *currentUser=User::getUser(uid);
+                cout<<"Password: "; cin>>pwd;
+                if(!currentUser->login(uid,pwd)) continue;
+                *currentWallet=Wallet::load(uid);
+                *currentBank=BankAccount::load(uid);
+            }
+            else if(choice==3){
+                string uid; cout<<"Enter User ID: "; cin>>uid;
+                User::resetPassword(uid);
+            }
+            else if(currentUser->userID==""){
+                cout<<"Please login first!\n"; continue;
+            }
+            else{
+                switch(choice){
+                    case 4:{
+                        string pwd;
+                        cout<<"Enter password to confirm: ";
+                        cin>>pwd;
+                        if(!currentUser->verifyPassword(pwd)){
+                            cout<<"Incorrect password! Transaction cancelled.\n";
+                            break;
+                        }
+                        double amt; 
+                        cout<<"Amount to add to wallet: "; 
+                        if(!(cin>>amt)){
+                            cout<<"Invalid amount!\n";
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            break;
+                        }
+                        if(amt <= 0){
+                            cout<<"Invalid amount!\n";
+                            break;
+                        }
+                    
+                        currentWallet->deposit(amt); 
+                        currentWallet->updateFile(); 
+                        break;
+                    }
+                    case 5:{
+                        string pwd;
+                        cout<<"Enter password to confirm: ";
+                        cin>>pwd;
+                        if(!currentUser->verifyPassword(pwd)){
+                            cout<<"Incorrect password! Transaction cancelled.\n";
+                            break;
+                        }
+                        double amt; 
+                        cout<<"Amount to add to bank: "; 
+                        if(!(cin>>amt)){
+                            cout<<"Invalid amount!\n";
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            break;
+                        }
+                        if(amt <= 0){
+                            cout<<"Invalid amount!\n";
+                            break;
+                        }
+                        currentBank->deposit(amt); 
+                        currentBank->updateFile(); 
+                        break;
+                    }
+                    case 6:{
+                        string rID; double amt;
+                        cout<<"Receiver ID: "; cin>>rID; 
+                        if(!User::exists(rID)){
+                            cout<<"Receiver not found!\n"; 
+                            break;
+                        }
+                        cout<<"Amount: "; 
+                        if(!(cin>>amt)){
+                            cout<<"Invalid amount!\n";
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            break;
+                        }
+                        if(amt <= 0){
+                            cout<<"Invalid amount!\n";
+                            break;
+                        }
+                        string pwd;
+                        cout<<"Enter password to confirm transfer: ";
+                        cin>>pwd;
+                        if(!currentUser->verifyPassword(pwd)){
+                            cout<<"Incorrect password! Transfer cancelled.\n";
+                            break;
+                        }
+                        Wallet recv=Wallet::load(rID);
+                        bank->transferWallet(*currentWallet,recv,currentUser->name,rID,amt);
+                    
+                        *currentWallet = Wallet::load(currentUser->userID);
+                        break;
+                    }
+                    case 7:{
+                        string rID; double amt;
+                        cout<<"Receiver ID: "; cin>>rID; 
+                        if(!User::exists(rID)){
+                            cout<<"Receiver not found!\n"; 
+                            break;
+                        }
+                        cout<<"Amount: "; 
+                        if(!(cin>>amt)){
+                            cout<<"Invalid amount!\n";
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            break;
+                        }
+                        if(amt <= 0){
+                            cout<<"Invalid amount!\n";
+                            break;
+                        }
+                        string pwd;
+                        cout<<"Enter password to confirm transfer: ";
+                        cin>>pwd;
+                        if(!currentUser->verifyPassword(pwd)){
+                            cout<<"Incorrect password! Transfer cancelled.\n";
+                            break;
+                        }
+                        BankAccount recv=BankAccount::load(rID);
+                        bank->transferBank(*currentBank,recv,currentUser->name,rID,amt);
+                        
+                        *currentBank = BankAccount::load(currentUser->userID);
+                        break;
+                    }
+                   case 8:
+    cout << fixed << setprecision(2);
+    cout << "Wallet Balance: ₹" << currentWallet->getBalance() << endl;
+    break;
+case 9:
+    cout << fixed << setprecision(2);
+    cout << "Bank Balance: ₹" << currentBank->getBalance() << endl;
+    break;
+
+                    case 10: Bank::showHistory(); break;
+                }
+            }
+        }
+
+        delete currentUser;
+        delete currentWallet;
+        delete currentBank;
+        delete bank;
+
+    } catch (const exception &e) {
+        cout << "An unexpected error occurred: " << e.what() << endl;
+    } catch (...) {
+        cout << "Unknown error occurred.\n";
+    }
+    return 0;
+}
 
 
