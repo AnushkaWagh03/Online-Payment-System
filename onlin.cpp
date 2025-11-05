@@ -236,7 +236,178 @@ saveSecurityQA();
   }
 }
 
+static User getUser(const string &uid) {
+    try {
+        ifstream fin("users.csv");
+        if (!fin.is_open()) return User();
+        string line;
+        while(getline(fin, line)) {
+            stringstream ss(line);
+            string fID, fName, hiddenPwd, fEmail, fPhoneStr, fSecQ, fSecA, realPwd;
+            getline(ss, fID, ',');
+            getline(ss, fName, ',');
+            getline(ss, hiddenPwd, ',');
+            getline(ss, fEmail, ',');
+            getline(ss, fPhoneStr, ',');
+            getline(ss, fSecQ, ',');
+            getline(ss, fSecA, ',');
+            getline(ss, realPwd, ',');
 
+            if(fID == uid) {
+                string fPhone = sanitizePhone(fPhoneStr);
+                string decryptedPwd;
+                try {
+                    decryptedPwd = decryptPassword(realPwd);
+                } catch (...) {
+                    decryptedPwd = ""; 
+                }
+
+                User u(fID, fName, decryptedPwd, fEmail, fPhone);
+                u.securityQuestion = fSecQ;
+                u.securityAnswer = fSecA;
+                return u;
+            }
+        }
+        return User();
+    } catch (const exception &e) {
+        return User();
+    }
+}
+static string getSecurityQuestion(const string &uid) {
+    try {
+        ifstream fin("security.csv");
+        string line;
+        while(getline(fin,line)){
+            stringstream ss(line);
+            string fID, encQ, encA;
+            getline(ss,fID,','); getline(ss,encQ,','); getline(ss,encA,',');
+            if(fID == uid) return decryptPassword(encQ);
+        }
+    } catch(...) {}
+    return "";
+}
+
+static bool verifySecurityAnswer(const string &uid, const string &ans) {
+    try {
+        ifstream fin("security.csv");
+        string line;
+        while(getline(fin,line)){
+            stringstream ss(line);
+            string fID, encQ, encA;
+            getline(ss,fID,','); getline(ss,encQ,','); getline(ss,encA,',');
+            if(fID == uid) return decryptPassword(encA) == ans;
+        }
+    } catch(...) {}
+    return false;
+}
+
+
+    bool login(string uid, string pwd){
+        if(uid==userID && pwd==password){
+            logIn=true;
+            cout << "Login successful!\n";
+            return true;
+        }
+        cout << "Wrong credentials.\n";
+        return false;
+    }
+    // Function overloading
+    bool login(string pwd){
+        if(pwd==password) {
+            logIn=true;
+            cout<<"Quick login successfully";
+            return true;
+        }
+        cout<<"Incorrect password";
+        return false;
+    }
+
+    bool verifyPassword(const string &pwd) const {
+        return pwd == password;
+    }
+static void resetPassword(const string &uid) {
+    try {
+        if (!exists(uid)) {
+            cout << "User not found!\n";
+            return;
+        }
+
+        ifstream fin("users.csv");
+        ofstream fout("temp.csv");
+        if (!fin.is_open() || !fout.is_open()) {
+            cout << "File error: Unable to access user data.\n";
+            return;
+        }
+
+        string line;
+        bool changed = false;
+        while (getline(fin, line)) {
+            stringstream ss(line);
+            string fID, fName, hiddenPwd, fEmail, fPhoneStr, fSecQ, fSecA, encPwd;
+            getline(ss, fID, ',');
+            getline(ss, fName, ',');
+            getline(ss, hiddenPwd, ',');
+            getline(ss, fEmail, ',');
+            getline(ss, fPhoneStr, ',');
+            getline(ss, fSecQ, ',');
+            getline(ss, fSecA, ',');
+            getline(ss, encPwd, ',');
+
+            if (fID == uid) {
+               string question = getSecurityQuestion(uid);
+if (question.empty()) {
+    cout << "No security question found.\n";
+    return;
+}
+cout << "Security Question: " << question << endl;
+
+                cout << "Answer: ";
+                string ans;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, ans);
+
+                if (verifySecurityAnswer(uid, ans)) {
+                    string newPwd;
+                    cout << "Enter new password: ";
+                    cin >> newPwd;
+                    User temp;
+                    if (!temp.isStrongPassword(newPwd)) {
+                        cout << "Password too weak! Must be 8+ chars, include upper, lower, digit, special char.\n";
+                        fout << line << endl; // unchanged
+                        continue;
+                    }
+
+                    string encNew = encryptPassword(newPwd);
+                    fout << fID << "," << fName << "," << "" << "," << fEmail << "," << fPhoneStr
+                         << "," << fSecQ << "," << fSecA << "," << encNew << endl;
+                    cout << "Password reset successful!\n";
+                    changed = true;
+                } else {
+                    fout << line << endl;
+                    cout << "Incorrect answer. Password not changed.\n";
+                }
+            } else {
+                fout << line << endl;
+            }
+        
+        }
+
+        fin.close();
+        fout.close();
+        remove("users.csv");
+        rename("temp.csv", "users.csv");
+
+        if (!changed)
+            cout << "No password updated.\n";
+
+    } catch (const exception &e) {
+        cout << "An error occurred during password reset: " << e.what() << endl;
+    }
+}
+
+
+    // Friend function
+    friend void showUserInfo(const User &u);
 
 
 
