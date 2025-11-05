@@ -753,7 +753,55 @@ cout << "From: " << s << " To: " << r
         }
     }
 };
+int main() {
+    try {
+        Bank* bank = new Bank();
+        User* currentUser = new User();
+        Wallet* currentWallet = new Wallet();
+        BankAccount* currentBank = new BankAccount();
 
+        int choice;
+        while(true){
+            cout<<"\n===== MENU =====\n";
+            cout<<"1. Register\n2. Login\n3. Forgot Password\n4. Add Money to Wallet\n5. Add Money to Bank\n";
+            cout<<"6. Wallet Transfer\n7. Bank Transfer\n8. Check Wallet Balance\n9. Check Bank Balance\n";
+            cout<<"10. Show Transactions\n0. Exit\n";
+
+            string input;
+            while (true) {
+                cout << "Choice: ";
+                cin >> input;
+
+                bool allDigits = true;
+                for (char c : input) {
+                    if (!isdigit(c)) {
+                        allDigits = false;
+                        break;
+                    }
+                }
+
+                if (!allDigits) {
+                    cout << "Invalid input! Please enter a number between 0 and 10.\n";
+                    continue;
+                }
+
+                try {
+                    choice = stoi(input); 
+                } catch (const invalid_argument&) {
+                    cout << "Invalid input! Please enter a number between 0 and 10.\n";
+                    continue;
+                } catch (const out_of_range&) {
+                    cout << "Please enter a choice between 0 and 10 only.\n";
+                    continue;
+                }
+
+                if (choice < 0 || choice > 10) {
+                    cout << "Please enter a choice between 0 and 10 only.\n";
+                    continue;
+                }
+
+                break; 
+            }
 
  
 
