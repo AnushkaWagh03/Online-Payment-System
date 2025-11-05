@@ -1,7 +1,15 @@
-#include<iostream>
-#include<fstream> //header file used for file
-#include<string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iomanip>
 #include <ctime>
+#include <map>
+#include <regex>
+#include <limits>
+#include <exception>
+#include <cctype>
+
 using namespace std;
 
 class User{  //the one who is using the system(customer)
