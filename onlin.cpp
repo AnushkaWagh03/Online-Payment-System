@@ -419,9 +419,61 @@ cout << "Security Question: " << question << endl;
     }
 }
 
-
     // Friend function
     friend void showUserInfo(const User &u);
+
+static string toHex(const string &s) {
+    static const char* hexDigits = "0123456789ABCDEF";
+    string out;
+    out.reserve(s.size()*2);
+    for(unsigned char c : s) {
+        out.push_back(hexDigits[c >> 4]);
+        out.push_back(hexDigits[c & 0x0F]);
+    }
+    return out;
+}
+
+static string fromHex(const string &hex) {
+    string out;
+    out.reserve(hex.size()/2);
+    for(size_t i=0; i+1 < hex.size(); i += 2) {
+        auto hexVal = [](char c)->int {
+            if(c >= '0' && c <= '9') return c - '0';
+            if(c >= 'A' && c <= 'F') return 10 + (c - 'A');
+            if(c >= 'a' && c <= 'f') return 10 + (c - 'a');
+            return 0;
+        };
+        unsigned char high = (unsigned char)hexVal(hex[i]);
+        unsigned char low  = (unsigned char)hexVal(hex[i+1]);
+        out.push_back((char)((high << 4) | low));
+    }
+    return out;
+}
+
+static string encryptPassword(const string &plain) {
+    const string key = "MySecretKey123"; 
+    string xored;
+    xored.reserve(plain.size());
+    for(size_t i=0;i<plain.size();++i)
+        xored.push_back( plain[i] ^ key[i % key.size()] );
+    return toHex(xored);
+}
+
+static string decryptPassword(const string &cipherHex) {
+    const string key = "MySecretKey123"; 
+    string x = fromHex(cipherHex);
+    string plain;
+    plain.reserve(x.size());
+    for(size_t i=0;i<x.size();++i)
+        plain.push_back( x[i] ^ key[i % key.size()] );
+    return plain;
+}
+
+};
+
+void showUserInfo(const User &u) {
+    cout << "User ID: " << u.userID << ", Name: " << u.name << ", Email: " << u.email << ", Phone: " << u.phone << endl;
+}
 
 class Account {
 public:
