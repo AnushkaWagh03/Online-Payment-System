@@ -682,7 +682,77 @@ inline bool withdraw(double amt){
 };
 
 
+class Bank {
+public:
+   void transferBank(BankAccount &s, BankAccount &r, const string &sn, const string &rn, double amt) {
+    if (s.withdraw(amt)) {
+        r.deposit(amt);
+        s.updateFile();
+        r.updateFile();
+        saveTransaction(s.userID, r.userID, amt, "Bank");
+       cout << fixed << setprecision(2);
+cout << "Bank transfer " << amt << " from " << sn << " to " << rn << " done!\n";
 
+    }
+}
+
+    void transferWallet(Wallet &s, Wallet &r, const string &sn, const string &rn, double amt){
+        try {
+            if(s.withdraw(amt)){
+                r.deposit(amt);
+                s.updateFile();
+                r.updateFile(); 
+                saveTransaction(s.userID,r.userID,amt,"Wallet");
+                cout << fixed << setprecision(2);
+                cout<<"Wallet transfer "<<amt<<" from "<<sn<<" to "<<rn<<" done!\n";
+            }
+        } catch (const exception &e) {
+            cout << "Transfer failed: " << e.what() << endl;
+        }
+    }
+    void saveTransaction(string s,string r,double amt,string type){
+        try {
+            ofstream fout("transactions.csv",ios::app);
+            if(!fout) return;
+            time_t now=time(0);
+            fout<<s<<","<<r<<","<<amt<<","<<type<<","<<now<<endl;
+            fout.close();
+        } catch (...) {
+           
+        }
+    }
+    static void showHistory(){
+        try {
+            ifstream fin("transactions.csv");
+            if (!fin.is_open()) {
+                cout<<"\nTransaction History:\n";
+                return;
+            }
+            string line;
+            cout<<"\nTransaction History:\n";
+            while(getline(fin, line)){
+                stringstream ss(line);
+                string s, r, type;
+                double amt;
+                long long t;
+                getline(ss, s, ',');
+                getline(ss, r, ',');
+                ss >> amt;
+                ss.ignore();
+                getline(ss, type, ',');
+                ss >> t;
+               cout << fixed << setprecision(2);
+cout << "From: " << s << " To: " << r 
+     << " | ₹ " << amt 
+     << " | Type: " << type 
+     << " | Time: " << ctime((time_t*)&t);
+
+            }
+        } catch (const exception &e) {
+            cout << "\nTransaction History:\n";
+        }
+    }
+};
 
 
  
