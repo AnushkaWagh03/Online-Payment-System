@@ -9,7 +9,6 @@
 #include <limits>
 #include <exception>
 #include <cctype>
-
 using namespace std;
 
 class User {
@@ -33,7 +32,7 @@ public:
     ~User() {
         
     }
- bool isValidEmail(string email) {
+bool isValidEmail(string email) {
     int atPos = email.find('@');
     int dotPos = email.find('.', atPos + 1); 
     if (atPos > 0 && dotPos > atPos + 1 && dotPos < email.length() - 1) {
@@ -41,7 +40,6 @@ public:
     }
     return false;
 }
-
 static string sanitizePhone(const string &raw) {
     string digits;
     for (char c : raw) {
@@ -52,7 +50,6 @@ static string sanitizePhone(const string &raw) {
     }
     return digits;
 }
-
 bool isValidPhone(const string &ph) {
     string p = sanitizePhone(ph);
     if (p.length() != 10)
@@ -77,7 +74,6 @@ bool isValidPhone(const string &ph) {
 
     return true;
 }
-
 bool isValidName(const string &nm) {
     if (nm.empty()) return false;
     for (char c : nm) {
@@ -134,7 +130,6 @@ static bool exists(const string &uid) {
     }
     return false;
 }
-
 static bool phoneExists(const string &rawPh) {
     string target = sanitizePhone(rawPh);
     if (target.empty()) return false;
@@ -156,9 +151,7 @@ static bool phoneExists(const string &rawPh) {
  }
     return false;
 }
-
-
-    void newRegisterUser() {
+void newRegisterUser() {
         do {
             cout << "Enter User ID: ";
             cin >> userID;
@@ -181,34 +174,27 @@ while (true) {
         cout << "Name cannot be empty.\n";
         continue;
     }
-
-    bool valid = true;
+ bool valid = true;
     for (char c : name) {
         if (!isalpha(static_cast<unsigned char>(c)) && c != ' ') {
             valid = false;
-            break;
-   }
+            break; }
     }
-
-    if (!valid) {
+if (!valid) {
         cout << "Invalid name! Only alphabets and spaces allowed.\n";
         continue;
     }
-
-    break; 
+break; 
 }
-
-
-        do {
-            cout << "Enter Email: ";
-            getline(cin, email);
-            if(!isValidEmail(email))
-                cout << "Invalid email format! Try again.\n";
-            else if(emailExists(email))
-                cout << "Email already exists! Try another.\n";
-        } while(!isValidEmail(email) || emailExists(email));
-
-        string rawPhone;
+do {
+cout << "Enter Email: ";
+getline(cin, email);
+if(!isValidEmail(email))
+ cout << "Invalid email format! Try again.\n";
+else if(emailExists(email))
+cout << "Email already exists! Try another.\n";
+ } while(!isValidEmail(email) || emailExists(email));
+ string rawPhone;
         do {
             cout << "Enter Phone Number (must include +91 followed by space ): ";
             getline(cin, rawPhone);
@@ -219,6 +205,39 @@ while (true) {
         } while(!isValidPhone(rawPhone) || phoneExists(rawPhone));
         
         phone = sanitizePhone(rawPhone);
+ do {
+            cout << "Enter Password: ";
+            cin >> password;
+            if(!isStrongPassword(password))
+                cout << "Password too weak! Must be 8+ chars, include upper, lower, digit, special char.\n";
+        } while(!isStrongPassword(password));
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        cout << "Set Security Question (e.g., Your favorite color?): ";
+        getline(cin, securityQuestion);
+        cout << "Answer: ";
+        getline(cin, securityAnswer);
+role = "Customer";
+cout << "Registration successful!\n";
+
+saveToFile();
+saveSecurityQA();
+ }
+ void saveToFile() {
+    string encPwd = encryptPassword(password);
+       try {
+        ofstream fout("users.csv", ios::app);
+        if (!fout) return;
+         fout << userID << "," << name << "," << email << "," << phone << "," 
+             << encPwd << endl;
+        fout.close();
+    } catch (...) {
+  }
+}
+
+
+
 
 
 
