@@ -559,6 +559,75 @@ public:
     void updateFile(){ Account::updateFile("banks.csv"); }
 };
 
+class Wallet : public Account {
+public:
+    Wallet():Account() {
+        this->userID="";
+        this->balance=0;
+    }
+    Wallet(string uid, double bal=0):Account(){
+        this->userID=uid;
+        this->balance=bal;
+    }
+
+    // Inline functions
+   inline void deposit(double amt){ 
+    Account::deposit(amt); 
+    cout << fixed << setprecision(2);
+    cout << "Added Rupees " << amt << " to wallet.\n";
+}
+
+inline bool withdraw(double amt){
+    if(Account::withdraw(amt)){ 
+        cout << fixed << setprecision(2);
+        cout << "Withdrew Rupees " << amt << " from wallet.\n"; 
+        return true; 
+    }
+    return false;
+}
+
+    inline double getBalance() const {
+         return Account::getBalance(); 
+    }
+    void saveToFile(){ Account::saveToFile("wallets.csv"); }
+    static Wallet load(const string &uid){
+        try {
+            ifstream fin("wallets.csv");
+            if (!fin.is_open()) return Wallet(uid,0);
+            string line;
+            while(getline(fin,line)){
+                stringstream ss(line);
+                string fID; double bal;
+                getline(ss,fID,','); 
+                ss >> bal;
+                if(fID==uid) return Wallet(fID, bal);
+            }
+            return Wallet(uid,0);
+        } catch (const exception &e) {
+            return Wallet(uid,0);
+        }
+    }
+
+    // Operator overloading
+    void updateFile(){ Account::updateFile("wallets.csv"); }
+    Wallet operator+(const Wallet &w) const {
+        return Wallet(this->userID + "&" + w.userID, this->balance + w.balance);
+    }
+
+    bool operator==(const Wallet &w) const {
+        return this->userID == w.userID;
+    }
+
+    double operator-(const Wallet &w) const {
+        return this->balance - w.balance;
+    }
+    
+    friend ostream& operator<<(ostream &out, const Wallet &w) {
+        out << fixed << setprecision(2);
+        out << "Wallet User ID: " << w.userID << "\nBalance: Rupees" << w.balance << endl;
+        return out;
+    }
+};
 
 
 
