@@ -119,6 +119,110 @@ static bool exists(const string &uid) {
     }
     return false;
 }
+ static bool emailExists(const string &mail) {
+    ifstream fin("users.csv");
+    if (!fin.is_open()) return false;
+    string line;
+    while (getline(fin, line)) {
+        stringstream ss(line);
+        string fID, fName, fPwd, fEmail;
+        getline(ss, fID, ',');
+        getline(ss, fName, ',');
+        getline(ss, fPwd, ',');
+        getline(ss, fEmail, ',');
+        if (fEmail == mail) return true;
+    }
+    return false;
+}
+
+static bool phoneExists(const string &rawPh) {
+    string target = sanitizePhone(rawPh);
+    if (target.empty()) return false;
+    ifstream fin("users.csv");
+    if (!fin.is_open()) return false;
+    string line;
+    while (getline(fin, line)) {
+        stringstream ss(line);
+        string fID, fName, fPwd, fEmail, fPhoneStr;
+        getline(ss, fID, ',');
+        getline(ss, fName, ',');
+        getline(ss, fPwd, ',');
+        getline(ss, fEmail, ',');
+        getline(ss, fPhoneStr, ',');
+        if (!fPhoneStr.empty()) {
+            string fSan = sanitizePhone(fPhoneStr);
+            if (fSan == target) return true;
+        }
+ }
+    return false;
+}
+
+
+    void newRegisterUser() {
+        do {
+            cout << "Enter User ID: ";
+            cin >> userID;
+            if(!isValidUserID(userID))
+                cout << "User ID must be at least 8 chars, include letters and numbers.\n";
+            else if(exists(userID))
+                cout << "User ID already exists! Try another.\n";
+        } while(!isValidUserID(userID) || exists(userID));
+
+       cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear leftover input
+
+while (true) {
+    cout << "Enter Name (letters and spaces only): ";
+    getline(cin, name);
+
+    while (!name.empty() && isspace(name.front())) name.erase(name.begin());
+    while (!name.empty() && isspace(name.back())) name.pop_back();
+
+    if (name.empty()) {
+        cout << "Name cannot be empty.\n";
+        continue;
+    }
+
+    bool valid = true;
+    for (char c : name) {
+        if (!isalpha(static_cast<unsigned char>(c)) && c != ' ') {
+            valid = false;
+            break;
+   }
+    }
+
+    if (!valid) {
+        cout << "Invalid name! Only alphabets and spaces allowed.\n";
+        continue;
+    }
+
+    break; 
+}
+
+
+        do {
+            cout << "Enter Email: ";
+            getline(cin, email);
+            if(!isValidEmail(email))
+                cout << "Invalid email format! Try again.\n";
+            else if(emailExists(email))
+                cout << "Email already exists! Try another.\n";
+        } while(!isValidEmail(email) || emailExists(email));
+
+        string rawPhone;
+        do {
+            cout << "Enter Phone Number (must include +91 followed by space ): ";
+            getline(cin, rawPhone);
+            if(!isValidPhone(rawPhone))
+                cout << "Invalid phone number! Must be 10 digits and start with 6-9.\n";
+            else if(phoneExists(rawPhone))
+                cout << "Phone number already exists! Try another.\n";
+        } while(!isValidPhone(rawPhone) || phoneExists(rawPhone));
+        
+        phone = sanitizePhone(rawPhone);
+
+
+
+
 
 
 
