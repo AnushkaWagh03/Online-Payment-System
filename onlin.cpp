@@ -512,7 +512,52 @@ cout << "Withdrew Rupees " << amt << endl;
     double getBalance() const { return balance; }
 };
 
+class BankAccount : public Account {
+public:
+    BankAccount(): Account() {
+        this->userID="";
+        this->balance=1000;
+    }
+    BankAccount(string uid, double bal=1000): Account() {
+        this->userID=uid;
+        this->balance=bal;
+    }
 
+   void deposit(double amt){ 
+    Account::deposit(amt); 
+    cout << fixed << setprecision(2);
+    cout << "Added Rupees " << amt << " to bank.\n"; 
+}
+
+   bool withdraw(double amt){
+    if(Account::withdraw(amt)){ 
+        cout << fixed << setprecision(2);
+        cout << "Withdrew Rupees " << amt << " from bank.\n"; 
+        return true; 
+    }
+    return false;
+}
+
+
+    void saveToFile(){ Account::saveToFile("banks.csv"); }
+    static BankAccount load(const string &uid){
+        try {
+            ifstream fin("banks.csv");
+            if (!fin.is_open()) return BankAccount(uid,1000);
+            string line;
+            while(getline(fin,line)){
+                stringstream ss(line);
+                string fID; double bal;
+                getline(ss,fID,','); ss>>bal;
+                if(fID==uid) return BankAccount(fID, bal);
+            }
+            return BankAccount(uid,1000);
+        } catch (const exception &e) {
+            return BankAccount(uid,1000);
+        }
+    }
+    void updateFile(){ Account::updateFile("banks.csv"); }
+};
 
 
 
