@@ -33,6 +33,39 @@ public:
     ~User() {
         
     }
+ bool isValidEmail(string email) {
+    int atPos = email.find('@');
+    int dotPos = email.find('.', atPos + 1); 
+    if (atPos > 0 && dotPos > atPos + 1 && dotPos < email.length() - 1) {
+        return true;
+    }
+    return false;
+}
+
+static string sanitizePhone(const string &raw) {
+    string digits;
+    for (char c : raw) {
+        if (isdigit((unsigned char)c)) digits.push_back(c);
+    }
+    if (digits.length() > 10) {
+        return digits.substr(digits.length() - 10);
+    }
+    return digits;
+}
+
+bool isValidPhone(const string &ph) {
+    string p = sanitizePhone(ph);
+    if (p.length() != 10)
+        return false;
+    if (p[0] < '6' || p[0] > '9')
+        return false;
+
+    if (p == "0000000000" || p == "1111111111" || p == "2222222222" ||
+        p == "3333333333" || p == "4444444444" || p == "5555555555" ||
+        p == "6666666666" || p == "7777777777" || p == "8888888888" ||
+        p == "9999999999")
+        return false;
+
 
 
 
